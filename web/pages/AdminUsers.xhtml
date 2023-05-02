@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Nerzur
+  Date: 23/01/2021
+  Time: 02:02
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+
+<h:head>
+</h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Administrar usuarios</ui:define>
+        <ui:define name="content">
+            <h1>Administrar Usuarios</h1>
+            #{adminUsers_bean.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+                <div class="row">
+                    <div class="col col-sm-2">
+                        <p:commandButton styleClass="btn btn-primary mr-2" icon="mdi mdi-library-plus" value="Adicionar" process="@this" actionListener="#{adminUsers_bean.clean_variables()}"
+                                         oncomplete="PF('addUserDialog').show()"
+                                         style="margin-right: .5rem"/>
+                        <br/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-12">
+                    <p:dataTable tableStyleClass="table-striped" id="dt-user" var="user" value="#{adminUsers_bean.list_users}" reflow="true" styleClass="table"
+                                 paginator="true" rows="10" paginatorPosition="bottom">
+                        <f:facet name="header">
+                            <div class="table-header">
+                                <span style="font-weight: bold">Usuarios</span>
+                            </div>
+                        </f:facet>
+                        <p:column headerText="Nombre de usuario" filterBy="#{user.username}" sortBy="#{user.username}">
+                            <h:outputText value="#{user.username}"/>
+                        </p:column>
+                        <p:column headerText="Identificaci&oacute;n" filterBy="#{user.identificacion}" sortBy="#{user.identificacion}">
+                            <h:outputText value="#{user.identificacion}"/>
+                        </p:column>
+                        <p:column headerText="Nombre" filterBy="#{user.nombre}" sortBy="#{user.nombre}">
+                            <h:outputText value="#{user.nombre}"/>
+                        </p:column>
+                        <p:column headerText="E-Mail" filterBy="#{user.email}" sortBy="#{user.email}">
+                            <h:outputText value="#{user.email}"/>
+                        </p:column>
+                        <p:column headerText="Estado" filterBy="#{adminUsers_bean.translate_estado(user.enabled)}" sortBy="#{adminUsers_bean.translate_estado(user.enabled)}">
+                            <p:outputLabel style="color: #{adminUsers_bean.translate_color_estado(user.enabled)}" value="#{adminUsers_bean.translate_estado(user.enabled)}"/>
+                        </p:column>
+                        <p:column headerText="Passw" filterBy="#{user.password}" sortBy="#{user.password}">
+                            <h:outputText value="#{user.password}"/>
+                        </p:column>
+                        <p:column headerText="Descripci&oacute;n" filterBy="#{user.descripcion}" sortBy="#{user.descripcion}">
+                            <h:outputText value="#{user.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Opciones" exportable="false">
+                            <p:commandButton icon="ui-icon-info" update=":form:info-user-content" process="@this" oncomplete="PF('infoUserDialog').show()" actionListener="#{adminUsers_bean.copyedit(user)}">
+                            </p:commandButton>
+                            <p:commandButton icon="ui-icon-edit" update=":form:edit-user-content" process="@this" oncomplete="PF('editUserDialog').show()" actionListener="#{adminUsers_bean.copyedit(user)}">
+                            </p:commandButton>
+                            <p:commandButton icon="ui-icon-trash" process="@this" oncomplete="PF('deleteUserDialog').show()">
+                                <f:setPropertyActionListener value="#{user}" target="#{adminUsers_bean.user}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    </div>
+                </div>
+                <!--Adicionar usuario dialog-->
+                <p:dialog header="Adicionar usuario" height="400" width="450" showEffect="fade" modal="true"
+                          widgetVar="addUserDialog" id="addUserDialog" responsive="true">
+                    <p:outputPanel id="manage-user-content" class="ui-fluid">
+                        #{adminUsers_bean.clean_variables()}
+                        <p:outputPanel>
+                                <div class="p-field">
+                                    <p:outputLabel for="username">Nombre de usuario: </p:outputLabel>
+                                    <p:inputText id="username" value="#{adminUsers_bean.username}" required="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="id">Identificaci&oacute;n: </p:outputLabel>
+                                    <p:inputMask id="id" value="#{adminUsers_bean.identificacion}" mask="99999999999" required="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="name">Nombre: </p:outputLabel>
+                                    <p:inputText id="name" value="#{adminUsers_bean.nombre}" required="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="email">E-mail: </p:outputLabel>
+                                    <p:inputText  id="email" value="#{adminUsers_bean.email}" validatorMessage="Direcci&oacute;n de correo err&oacute;nea" required="true">
+                                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]+$"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="password">Contrase&ntilde;a: </p:outputLabel>
+                                    <p:password id="password" value="#{adminUsers_bean.password}" feedback="true" required="true"
+                                                promptLabel="Ingresa tu contraseña" weakLabel="Débil"
+                                                goodLabel="Buena" strongLabel="Fuerte"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="description">Descripci&oacute;n: </p:outputLabel>
+                                    <p:inputTextarea id="description" value="#{adminUsers_bean.descripcion}"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="category">Habilitado</p:outputLabel>
+                                    <p:selectOneRadio id="category" value="#{adminUsers_bean.enabled}"
+                                                      layout="responsive" columns="2">
+                                        <f:selectItem itemLabel="Habilitado" itemValue="true"/>
+                                        <f:selectItem itemLabel="Deshabilitado" itemValue="false"/>
+                                    </p:selectOneRadio>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel value="Roles del Usuario" for="roles"/>
+                                    <p:selectManyMenu filter="true" filterMatchMode="contains" requiredMessage="Roles: Se requiere al menos un ROL"  required="true" showCheckbox="true" label="Roles" id="roles" value="#{adminUsers_bean.list_roles}">
+                                        <f:selectItem itemLabel=" Administrador" itemValue="ROLE_ADMIN" />
+                                        <f:selectItem itemLabel=" Usuario" itemValue="ROLE_USER" />
+                                    </p:selectManyMenu>
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>
+                            <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{adminUsers_bean.create_user()}"
+                                             update="manage-user-content" process="manage-user-content @this"/>
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('addUserDialog').hide()"
+                                             class="ui-button-secondary"/>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        </f:facet>
+                </p:dialog>
+
+                <!--Editar usuario Dialog-->
+                <p:dialog header="Editar usuario" height="400" width="450" showEffect="fade" modal="true"
+                          widgetVar="editUserDialog" id="editUserDialog" responsive="true">
+                    <p:outputPanel id="edit-user-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="p-field">
+                                <p:outputLabel for="username1">Nombre de usuario: </p:outputLabel>
+                                <p:inputText id="username1" disabled="true" value="#{adminUsers_bean.user.username}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="id1">Identificaci&oacute;n: </p:outputLabel>
+                                <p:inputMask id="id1" value="#{adminUsers_bean.user.identificacion}" mask="99999999999" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="name1">Nombre: </p:outputLabel>
+                                <p:inputText id="name1" value="#{adminUsers_bean.user.nombre}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="email1">E-mail: </p:outputLabel>
+                                <p:inputText  id="email1" value="#{adminUsers_bean.user.email}" validatorMessage="Direcci&oacute;n de correo err&oacute;nea" required="true">
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="password1">Contrase&ntilde;a: </p:outputLabel>
+                                <p:password id="password1" value="#{adminUsers_bean.user.password}" feedback="true"
+                                            promptLabel="Ingresa tu contraseña" weakLabel="Débil"
+                                            goodLabel="Buena" strongLabel="Fuerte"/>
+                                <p:staticMessage severity="info" detail="Dejar el campo vac&iacute;o para mantener contrase&ntilde;a actual." style="width: 100%"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="description1">Descripci&oacute;n: </p:outputLabel>
+                                <p:inputTextarea id="description1" value="#{adminUsers_bean.user.descripcion}"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="category1">Habilitado</p:outputLabel>
+                                <p:selectOneRadio id="category1" value="#{adminUsers_bean.user.enabled}"
+                                                  layout="responsive" columns="2">
+                                    <f:selectItem itemLabel="Habilitado" itemValue="true"/>
+                                    <f:selectItem itemLabel="Deshabilitado" itemValue="false"/>
+                                </p:selectOneRadio>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel value="Roles del Usuario" for="roles1"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains" requiredMessage="Roles: Se requiere al menos un ROL"  required="true" showCheckbox="true" label="Roles" id="roles1" value="#{adminUsers_bean.list_roles}">
+                                    <f:selectItem itemLabel=" Administrador" itemValue="ROLE_ADMIN" />
+                                    <f:selectItem itemLabel=" Usuario" itemValue="ROLE_USER" />
+                                </p:selectManyMenu>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>
+        <!--                <p:outputLabel style="color: red"  value="* Campos de llenado obligatorio"/> <br></br>-->
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{adminUsers_bean.edit()}"
+                                         update="edit-user-content" process="edit-user-content @this"/>
+                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('editUserDialog').hide()"
+                                         class="ui-button-secondary" update="edit-user-content" process="edit-user-content @this"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Info usuario Dialog-->
+                <p:dialog header="Informaci&oacute;n del usuario" width="450" showEffect="fade" modal="true"
+                          widgetVar="infoUserDialog" id="infoUserDialog" responsive="true">
+                    <p:outputPanel id="info-user-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="p-field">
+                                <strong>Nombre de usuario: </strong>
+                                <p:outputLabel>#{adminUsers_bean.user.username}</p:outputLabel>
+                            </div>
+                            <div class="p-field">
+                                <strong>Identificaci&oacute;n: </strong>
+                                <p:outputLabel>#{adminUsers_bean.user.identificacion}</p:outputLabel>
+                            </div>
+                            <div class="p-field">
+                                <strong>Nombre: </strong>
+                                <p:outputLabel>#{adminUsers_bean.user.nombre}</p:outputLabel>
+                            </div>
+                            <div class="p-field">
+                                <strong>E-Mail: </strong>
+                                <p:outputLabel>#{adminUsers_bean.user.email}</p:outputLabel>
+                            </div>
+                            <div class="p-field">
+                                <strong>Descripci&oacute;n: </strong>
+                                <p:outputLabel>#{adminUsers_bean.user.descripcion}</p:outputLabel>
+                            </div>
+                            <div class="p-field">
+                                <strong>Estado: </strong>
+                                <p:outputLabel style="color: #{adminUsers_bean.translate_color_estado(adminUsers_bean.user.enabled)}">#{adminUsers_bean.translate_estado(adminUsers_bean.user.enabled)}</p:outputLabel>
+                            </div>
+                            <div class="p-field">
+                                <strong>Permisos: </strong>
+                                <p:dataList value="#{adminUsers_bean.list_roles}" var="role" emptyMessage="No tiene permisos" type="definition">
+                                    <p:outputLabel value="#{role}"></p:outputLabel>
+                                </p:dataList>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoUserDialog').hide()"
+                                         class="ui-button-secondary" update="info-user-content" process="info-user-content @this"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Confirm dialog-->
+                <p:confirmDialog widgetVar="deleteUserDialog" showEffect="fade" width="300"
+                                 message="Eliminar el usuario?" header="Confirm" severity="warn">
+                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminUsers_bean.delete}"
+                                     process="@this" oncomplete="PF('deleteUserDialog').hide()"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteUserDialog').hide()"/>
+                </p:confirmDialog>
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="ui-icon-times"/>
+                </p:confirmDialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

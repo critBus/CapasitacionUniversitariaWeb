@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/index.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminUsers.faces" access="hasAnyRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/resources/*" access="permitAll()"/>
+        <security:intercept-url pattern="/login.faces" access="isAnonymous()"/>
+
+        <!--Configuration of login and logout pages-->
+        <security:form-login login-page='/login.faces' default-target-url='/index.faces'
+                             always-use-default-target='true'/>
+        <security:logout logout-success-url="/login.faces" delete-cookies="JSESSIONID"/>
+
+        <security:session-management>
+            <security:concurrency-control max-sessions="2"/>
+<!--            <security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>-->
+        </security:session-management>
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider>
+
+            <security:jdbc-user-service data-source-ref="securityDataSource"/>
+                        <security:password-encoder hash="sha"/>
+            <!--                <security:password-encoder hash="sha-256"/>-->
+            <!--                 <security:salt-source user-property="username"/> -->
+            <!--            </security:password-encoder>-->
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <!--Configuration of DB source to login-->
+    <bean id="securityDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5433/practicas_Is_4"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="postgres"/>
+    </bean>
+</beans>

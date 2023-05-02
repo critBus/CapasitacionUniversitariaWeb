@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Nerzur
+  Date: 26/01/2021
+  Time: 11:26
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+
+>
+
+<h:head>
+    <title>Login</title>
+</h:head>
+
+<h:body>
+    <!-- # {adminUsers_bean.agregarSiNoHayNinguno()} -->
+    <form action="/login" method="post"> ❶
+        <c:if test="${param.error != null}"> ❷
+            <p>
+                Invalid username and password.
+            </p>
+        </c:if>
+        <c:if test="${param.logout != null}"> ❸
+            <p>
+                You have been logged out.
+            </p>
+        </c:if>
+        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
+            <div class="alert-danger">
+                <button class="close-link" data-dismiss="alert"><span>&times;</span></button>
+                <strong>Warning!</strong> ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+            </div>
+        </c:if>
+        <p>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"/> ❹
+        </p>
+        <p>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"/> ❺
+        </p>
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}"/>
+        <button type="submit" class="btn">Log in</button>
+    </form>
+    
+</h:body>
+
+</html>
