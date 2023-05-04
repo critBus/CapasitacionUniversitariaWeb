@@ -15,12 +15,13 @@ import java.util.concurrent.ExecutionException;
 public class RestUniversitario {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/Universitario/";
-	public Universitario findById(int id) {
+	public Universitario findById(int id) throws Exception{
 		Universitario universitario = null;
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return null;
 			}else {
@@ -42,7 +43,7 @@ public class RestUniversitario {
 		return universitario;
 	}
 	//sending request to retrieve all universitarios available.
-	public List<Universitario> findAll() {
+	public List<Universitario> findAll() throws Exception{
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
 		List<Universitario> list_universitarios = null;
@@ -58,7 +59,7 @@ public class RestUniversitario {
 		return list_universitarios;
 	}
 	//send request to add the product details.
-	public boolean create(Universitario universitario){
+	public boolean create(Universitario universitario)throws Exception{
 		String inputJson = null;
 		inputJson = JSONUtils.covertFromObjectToJson(universitario);
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
@@ -66,7 +67,8 @@ public class RestUniversitario {
 				.POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				return false;
 			}
 		} catch (InterruptedException e) {
@@ -79,7 +81,7 @@ public class RestUniversitario {
 		return true;
 	}
 	//send request to update a Universitario details.
-	public boolean update(Universitario universitario){
+	public boolean update(Universitario universitario)throws Exception{
 		String inputJson= null;
 		inputJson = JSONUtils.covertFromObjectToJson(universitario);
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"update"))
@@ -87,7 +89,8 @@ public class RestUniversitario {
 				.PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return false;
 			} else {
@@ -103,15 +106,15 @@ public class RestUniversitario {
 		return false;
 	}
 	//send request to delete the universitario by its universitarioname
-	public boolean delete(Integer id) {
+	public boolean delete(Integer id)throws Exception {
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500) {
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return false;
 			} else {
-				Universitario universitario = JSONUtils.covertFromJsonToObject(response.get().body(), Universitario.class);
 				response.join();
 				return true;
 			}

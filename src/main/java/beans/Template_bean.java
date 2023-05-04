@@ -4,9 +4,11 @@ import Entity.Authorities;
 import Entity.Users;
 import Rest.RestAuthorities;
 import Rest.RestUsers;
+import org.primefaces.PrimeFaces;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -34,8 +36,15 @@ public class Template_bean {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
-
+    private void responderException(Exception ex){
+        System.out.println("error en template");
+        ex.printStackTrace();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                , "Errores en el servidor", ex.getMessage()));
+        PrimeFaces.current().ajax().update("form_template:messages_template");
+    }
     public void init() {
+        try{
         username = currentUser();
         List<Authorities> list_auth = restAuthorities.findAuthorityByUsername(username);
         roles.clear();
@@ -43,6 +52,9 @@ public class Template_bean {
             roles.add(auth.getAuthoritiesPK().getAuthority());
         user = restUsers.findUserByUsername(username);
         verifyRol();
+        }catch (Exception ex){
+            responderException(ex);
+        }
     }
 
 

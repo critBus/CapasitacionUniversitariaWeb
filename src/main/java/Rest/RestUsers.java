@@ -20,7 +20,7 @@ public class RestUsers {
     private static final String serviceURL = "http://localhost:8081/Users/";
 
     //sending request to retrieve all users available.
-    public List<Users> findAllUsers() {
+    public List<Users> findAllUsers() throws Exception{
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
         List<Users> list_users = null;
@@ -37,7 +37,7 @@ public class RestUsers {
     }
 
     //sending request retrieve the user based on the username
-    public Users findUserByUsername(String username) {
+    public Users findUserByUsername(String username) throws Exception{
         Users user = null;
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+username)).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
@@ -66,7 +66,7 @@ public class RestUsers {
     }
 
     //send request to add the product details.
-    public boolean createUser(Users user){
+    public boolean createUser(Users user)throws Exception{
         String inputJson = null;
         inputJson = JSONUtils.covertFromObjectToJson(user);
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
@@ -88,7 +88,7 @@ public class RestUsers {
     }
 
     //send request to update a User details.
-    public boolean updateUser(Users user){
+    public boolean updateUser(Users user)throws Exception{
         String inputJson= null;
         inputJson = JSONUtils.covertFromObjectToJson(user);
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"update"))
@@ -113,7 +113,7 @@ public class RestUsers {
     }
 
     //send request to delete the user by its username
-    public boolean deleteUser(String username) {
+    public boolean deleteUser(String username)throws Exception{
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+username)).DELETE().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
@@ -121,7 +121,7 @@ public class RestUsers {
                 response.join();
                 return false;
             } else {
-                Users user = JSONUtils.covertFromJsonToObject(response.get().body(), Users.class);
+                //Users user = JSONUtils.covertFromJsonToObject(response.get().body(), Users.class);
                 response.join();
                 return true;
             }

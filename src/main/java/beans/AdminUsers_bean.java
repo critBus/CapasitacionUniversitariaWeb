@@ -33,9 +33,12 @@ public class AdminUsers_bean {
     private static RestAuthorities restAuthorities = new RestAuthorities();
 
     public void init(){
-        list_users.clear();
+        try {
+            list_users.clear();
 //        clean_variables();
-        list_users = restUsers.findAllUsers();
+            list_users = restUsers.findAllUsers();
+        }catch (Exception ex){responderException(ex);}
+
     }
 
     public List<String> getList_roles() {
@@ -138,6 +141,7 @@ public class AdminUsers_bean {
     }
 
     public void create_user(){
+        try{
         password = DigestUtils.shaHex(password);
         Users user = new Users(username,identificacion,nombre,email,password,enabled,descripcion);
         Users user_finded =  restUsers.findUserByUsername(username);
@@ -160,9 +164,11 @@ public class AdminUsers_bean {
         list_roles.clear();
         PrimeFaces.current().executeScript("PF('addUserDialog').hide()");
         PrimeFaces.current().ajax().update("form:messages", "form:dt-user");
+        }catch (Exception ex){responderException(ex);}
     }
 
     public void copyedit(Users us) {
+        try{
         if(us!=null)
             user = new Users(us.getUsername(),us.getIdentificacion(),us.getNombre(),us.getEmail(),"",us.getEnabled(),us.getDescripcion());
         List<Authorities> l = restAuthorities.findAuthorityByUsername(us.getUsername());
@@ -170,9 +176,18 @@ public class AdminUsers_bean {
         for (Authorities lr : l){
             list_roles.add(lr.getAuthoritiesPK().getAuthority());
         }
+        }catch (Exception ex){responderException(ex);}
     }
-
+    private void responderException(Exception ex){
+        ex.printStackTrace();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                , "Errores en el servidor", ex.getMessage()));
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-user");
+    }
     public void edit(){
+        try{
+
+
         Users user_finded = restUsers.findUserByUsername(user.getUsername());
         if(user_finded == null){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Existen errores al editar el usuario", "Usuario inexistente"));
@@ -201,9 +216,11 @@ public class AdminUsers_bean {
         list_roles.clear();
         PrimeFaces.current().executeScript("PF('editUserDialog').hide()");
         PrimeFaces.current().ajax().update("form:messages", "form:dt-user");
+        }catch (Exception ex){responderException(ex);}
     }
 
     public void delete(){
+        try{
         if(user==null)
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Existen errores al eliminar el usuario", "Usuario inexistente"));
         else {
@@ -217,6 +234,7 @@ public class AdminUsers_bean {
         }
         init();
         PrimeFaces.current().ajax().update("form:messages", "form:dt-user");
+        }catch (Exception ex){responderException(ex);}
     }
 
     public String translate_estado(boolean text){

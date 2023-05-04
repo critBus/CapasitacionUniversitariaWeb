@@ -18,7 +18,7 @@ public class RestAuthorities {
     private static final String serviceURL = "http://localhost:8081/Authorities/";
 
     //sending request to retrieve all Authorities available.
-    public List<Authorities> findAllAuthorities() {
+    public List<Authorities> findAllAuthorities() throws Exception {
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
         List<Authorities> list_Authorities = null;
@@ -35,7 +35,7 @@ public class RestAuthorities {
     }
 
     //sending request retrieve the authorities by id
-    public List<Authorities> findAuthorityByUsername(String username)
+    public List<Authorities> findAuthorityByUsername(String username) throws Exception
     {
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findByUsername/"+username)).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
@@ -65,7 +65,7 @@ public class RestAuthorities {
     }
 
     //send request to add the product details.
-    public boolean createAuthority(Authorities authority){
+    public boolean createAuthority(Authorities authority)throws Exception{
         String inputJson = null;
         inputJson = JSONUtils.covertFromObjectToJson(authority);
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
@@ -87,7 +87,7 @@ public class RestAuthorities {
     }
 
     //send request to update a Authority details.
-    public boolean updateAuthority(Authorities authority){
+    public boolean updateAuthority(Authorities authority)throws Exception{
         String inputJson= null;
         inputJson = JSONUtils.covertFromObjectToJson(authority);
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"update"))
@@ -112,7 +112,7 @@ public class RestAuthorities {
     }
 
     //send request to delete the Authority by its Authorityname
-    public boolean deleteAuthority(AuthoritiesPK authoritiesPK)
+    public boolean deleteAuthority(AuthoritiesPK authoritiesPK)throws Exception
     {
         String inputJson= null;
         inputJson = JSONUtils.covertFromObjectToJson(authoritiesPK);
@@ -125,7 +125,7 @@ public class RestAuthorities {
                 response.join();
                 return false;
             } else {
-                Authorities Authority = JSONUtils.covertFromJsonToObject(response.get().body(), Authorities.class);
+                //Authorities Authority = JSONUtils.covertFromJsonToObject(response.get().body(), Authorities.class);
                 response.join();
                 return true;
             }

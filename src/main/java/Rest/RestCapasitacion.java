@@ -15,12 +15,13 @@ import java.util.concurrent.ExecutionException;
 public class RestCapasitacion {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/Capasitacion/";
-	public Capasitacion findById(int id) {
+	public Capasitacion findById(int id) throws Exception{
 		Capasitacion capasitacion = null;
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return null;
 			}else {
@@ -42,7 +43,7 @@ public class RestCapasitacion {
 		return capasitacion;
 	}
 	//sending request to retrieve all capasitacions available.
-	public List<Capasitacion> findAll() {
+	public List<Capasitacion> findAll() throws Exception{
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
 		List<Capasitacion> list_capasitacions = null;
@@ -58,7 +59,7 @@ public class RestCapasitacion {
 		return list_capasitacions;
 	}
 	//send request to add the product details.
-	public boolean create(Capasitacion capasitacion){
+	public boolean create(Capasitacion capasitacion)throws Exception{
 		String inputJson = null;
 		inputJson = JSONUtils.covertFromObjectToJson(capasitacion);
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
@@ -66,7 +67,8 @@ public class RestCapasitacion {
 				.POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				return false;
 			}
 		} catch (InterruptedException e) {
@@ -79,7 +81,7 @@ public class RestCapasitacion {
 		return true;
 	}
 	//send request to update a Capasitacion details.
-	public boolean update(Capasitacion capasitacion){
+	public boolean update(Capasitacion capasitacion)throws Exception{
 		String inputJson= null;
 		inputJson = JSONUtils.covertFromObjectToJson(capasitacion);
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"update"))
@@ -87,7 +89,8 @@ public class RestCapasitacion {
 				.PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return false;
 			} else {
@@ -103,15 +106,15 @@ public class RestCapasitacion {
 		return false;
 	}
 	//send request to delete the capasitacion by its capasitacionname
-	public boolean delete(Integer id) {
+	public boolean delete(Integer id)throws Exception {
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500) {
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return false;
 			} else {
-				Capasitacion capasitacion = JSONUtils.covertFromJsonToObject(response.get().body(), Capasitacion.class);
 				response.join();
 				return true;
 			}

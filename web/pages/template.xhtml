@@ -194,6 +194,12 @@
                             <span class="menu-title">Administrar Estudiantes</span>
                         </p:link>
                     </li>
+                    <li class="nav-item">
+                        <p:link href="/pages/AdminProfesor.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Administrar Profesores</span>
+                        </p:link>
+                    </li>
                     <li class="nav-item" style="#{template_bean.translateRole_visible(template_bean.role_admin)}">
                         <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <i class="mdi mdi-circle-outline menu-icon"></i>
@@ -267,6 +273,8 @@
                                         Add class <code>.table-striped</code>
                                     </p>
                                     <div class="table-responsive">
+                                        <h:form id="form_template">
+                                            <p:growl id="messages_template" showDetail="true"/></h:form>
                                         <ui:insert name="content">
 
                                         </ui:insert>

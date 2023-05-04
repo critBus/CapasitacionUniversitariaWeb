@@ -15,12 +15,13 @@ import java.util.concurrent.ExecutionException;
 public class RestCapasitacionProfesor {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/CapasitacionProfesor/";
-	public CapasitacionProfesor findById(int id) {
+	public CapasitacionProfesor findById(int id) throws Exception{
 		CapasitacionProfesor capasitacionprofesor = null;
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return null;
 			}else {
@@ -42,7 +43,7 @@ public class RestCapasitacionProfesor {
 		return capasitacionprofesor;
 	}
 	//sending request to retrieve all capasitacionprofesors available.
-	public List<CapasitacionProfesor> findAll() {
+	public List<CapasitacionProfesor> findAll() throws Exception{
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
 		List<CapasitacionProfesor> list_capasitacionprofesors = null;
@@ -58,7 +59,7 @@ public class RestCapasitacionProfesor {
 		return list_capasitacionprofesors;
 	}
 	//send request to add the product details.
-	public boolean create(CapasitacionProfesor capasitacionprofesor){
+	public boolean create(CapasitacionProfesor capasitacionprofesor)throws Exception{
 		String inputJson = null;
 		inputJson = JSONUtils.covertFromObjectToJson(capasitacionprofesor);
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
@@ -66,7 +67,8 @@ public class RestCapasitacionProfesor {
 				.POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				return false;
 			}
 		} catch (InterruptedException e) {
@@ -79,7 +81,7 @@ public class RestCapasitacionProfesor {
 		return true;
 	}
 	//send request to update a CapasitacionProfesor details.
-	public boolean update(CapasitacionProfesor capasitacionprofesor){
+	public boolean update(CapasitacionProfesor capasitacionprofesor)throws Exception{
 		String inputJson= null;
 		inputJson = JSONUtils.covertFromObjectToJson(capasitacionprofesor);
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"update"))
@@ -87,7 +89,8 @@ public class RestCapasitacionProfesor {
 				.PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return false;
 			} else {
@@ -103,15 +106,15 @@ public class RestCapasitacionProfesor {
 		return false;
 	}
 	//send request to delete the capasitacionprofesor by its capasitacionprofesorname
-	public boolean delete(Integer id) {
+	public boolean delete(Integer id)throws Exception {
 		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500) {
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
 				response.join();
 				return false;
 			} else {
-				CapasitacionProfesor capasitacionprofesor = JSONUtils.covertFromJsonToObject(response.get().body(), CapasitacionProfesor.class);
 				response.join();
 				return true;
 			}

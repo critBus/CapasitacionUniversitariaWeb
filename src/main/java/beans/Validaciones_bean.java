@@ -15,6 +15,7 @@ import java.util.List;
 
 import Entity.*;
 import Utils.*;
+import org.primefaces.PrimeFaces;
 import org.primefaces.util.ConsumerThree;
 
 @ManagedBean
@@ -138,11 +139,11 @@ public class Validaciones_bean {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
 //            if (!(Character.isLetter(c)  || Character.isWhitespace(c))) {
-//                return MENSAJE_NO_CARACTERES_ESTRANNOS;
+//                return MSG_NO_CARACTERES_ESTRANNOS;
 //            }
             if (Character.isLetter(c)) {
                 contieneLetras = true;
-                elAnteriorFueEspacio = false;
+
                 if (i == 0 || elAnteriorFueEspacio) {
                     if (!Character.isUpperCase(c)) {
                         return MENSAJE_NOMBRES_CON_MAYUSCULA;
@@ -152,6 +153,7 @@ public class Validaciones_bean {
                         return MENSAJE_NOMBRES_SOLO_PRIMERA_LETRA_MAYUSCULA;
                     }
                 }
+                elAnteriorFueEspacio = false;
                 continue;
             }
             if (Character.isWhitespace(c)) {
@@ -161,6 +163,7 @@ public class Validaciones_bean {
             }
             return TIENEN_QUE_SER_SOLO_LETRAS;
         }
+
         if (!contieneLetras) {
             return MENSAJE_DEBE_CONTENER_LETRAS;
         }
@@ -262,6 +265,7 @@ public class Validaciones_bean {
 
 
     public void validarNombre(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        try{
         String nombre = (String) value;
         String validarNombre_mensaje=obtener_validacion_nombre(nombre,4,50);
         if (validarNombre_mensaje!=null) {
@@ -273,9 +277,13 @@ public class Validaciones_bean {
 
             throw new ValidatorException(message);
         }
+        }catch (ValidatorException ex){
+            throw ex;
+        }catch (Exception ex){responderException(ex);}
     }
 
     public void validarConLetras(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        try{
         String nombre = (String) value;
         String validarNombre_mensaje=obtener_validacion_con_letras(nombre,4,50);
         if (validarNombre_mensaje!=null) {
@@ -286,6 +294,33 @@ public class Validaciones_bean {
             message.setDetail(validarNombre_mensaje);
 
             throw new ValidatorException(message);
-        }
+        }}catch (ValidatorException ex){
+            throw ex;
+        }catch (Exception ex){responderException(ex);}
     }
+    private void responderException(Exception ex){
+        System.out.println("error en validacion");
+        ex.printStackTrace();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                , "Errores en el servidor", ex.getMessage()));
+        PrimeFaces.current().ajax().update("form_template:messages_template");
+    }
+
+//    public void validarNumero(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+//        try{
+//            String nombre = ( value.toString()).trim();
+//
+//            String validarNombre_mensaje=nombre.length()==0&&"12345".contains(nombre)?null:"no es un numero valido";
+//            if (validarNombre_mensaje!=null) {
+//                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR
+//                        , component.getAttributes().get(ATRIBUTO_MSJ_VALIDACION).toString()
+//                        , validarNombre_mensaje);
+//                message.setSummary(component.getAttributes().get(ATRIBUTO_MSJ_VALIDACION).toString());
+//                message.setDetail(validarNombre_mensaje);
+//
+//                throw new ValidatorException(message);
+//            }}catch (ValidatorException ex){
+//            throw ex;
+//        }catch (Exception ex){responderException(ex);}
+//    }
 }

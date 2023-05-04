@@ -3,7 +3,7 @@ package Rest;
 import Entity.AuthoritiesPK;
 
 public class RestTEST {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 //        RestAuthorities restAuthorities = new RestAuthorities();
 //        AuthoritiesPK authoritiesPK = new AuthoritiesPK("admin","ROLE_PF");
 //        System.out.println(restAuthorities.deleteAuthority(authoritiesPK));

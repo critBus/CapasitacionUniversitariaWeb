@@ -13,39 +13,41 @@ import java.util.List;
 
 @ManagedBean
 @SessionScoped
-public class AdminEstudiantes_bean {
+public class AdminProfesores_bean {
+    private  List<Profesor> lista_de_entidades = new ArrayList<Profesor>();
 
-    private static List<Estudiante> lista_de_entidades = new ArrayList<Estudiante>();
+    private  String nombre = "";
+    private  String facultad = "";
+    private  String carrera = "";
 
-    private static String nombre = "";
-    private static String facultad = "";
-    private static String carrera = "";
-
-    private static String descripcion = "";
-    private static int curso=1;
-    private static int semestre=1;
+    private  String descripcion = "";
+    private  int curso=1;
+    private  int semestre=1;
+    
+    public  String especialidad= "";
+    public  boolean esEstudiante=false;
 
     public  String ID_DLG_ADD="addDialog";
     public  String ID_DLG_EDIT="editDialog";
     public  String ID_DATA_TABLE="dt-entidad";
 
-    private static Estudiante entidad;
-//    private static Estudiante entidad_editar;
+    private static Profesor entidad;
+//    private static Profesor entidad_editar;
 
     private static ConexionBD bd=new ConexionBD();
     public void init(){
         try{
-        lista_de_entidades.clear();
-        lista_de_entidades =bd.obtenerListaDeEstudiantes();
-    }catch (Exception ex){
+            lista_de_entidades.clear();
+            lista_de_entidades =bd.obtenerListaDeProfesores();
+        }catch (Exception ex){
             responderException(ex);
-    }
+        }
 
 
 
     }
     private void responderException(Exception ex){
-        System.out.println("error en Estudiante");
+        System.out.println("error en Profesor");
         ex.printStackTrace();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
                 , "Errores en el servidor", ex.getMessage()));
@@ -60,37 +62,49 @@ public class AdminEstudiantes_bean {
         descripcion = "";
         curso=1;
         semestre=1;
+
+        esEstudiante=false;
+        especialidad="";
     }
 
     public void create(){
         try{
             nombre=nombre.trim();
-        Estudiante finded=bd.obtenerEstudiante(nombre);
-        if(finded!=null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                    , "Ya existe una persona en la universidad con este nombre", ""));
-            PrimeFaces.current().ajax().update("form:messages");
-            return;
-        }
-        facultad=facultad.trim();
-        carrera=carrera.trim();
-        if(descripcion!=null){
-            descripcion=descripcion.trim();
-        }
+            Profesor finded=bd.obtenerProfesor(nombre);
+            if(finded!=null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                        , "Ya existe una persona en la universidad con este nombre", ""));
+                PrimeFaces.current().ajax().update("form:messages");
+                return;
+            }
+            facultad=facultad.trim();
+            carrera=carrera.trim();
+            if(descripcion!=null){
+                descripcion=descripcion.trim();
+            }
+            especialidad=especialidad.trim();
 
-        Estudiante e=bd.crearEstudiante(nombre,facultad,carrera,descripcion,curso,semestre);
-        if(e!=null){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
-                    , "Estudiante Adicionado", ""));
+            Profesor e=null;
+            if(esEstudiante){
+                e=bd.crearProfesorEstudiante(nombre,facultad,carrera,descripcion,especialidad,curso,semestre);
+            }else{
+                e=bd.crearProfesor(nombre,facultad,carrera,descripcion,especialidad);
+            }
 
-            init();
+            if(e!=null){
 
-            PrimeFaces.current().executeScript("PF('"+ID_DLG_ADD+"').hide()");
-        }
-        else{
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                    , "Existen errores en el formulario", ""));
-        }
+
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
+                        , "Profesor Adicionado", ""));
+
+                init();
+
+                PrimeFaces.current().executeScript("PF('"+ID_DLG_ADD+"').hide()");
+            }
+            else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                        , "Existen errores en el formulario", ""));
+            }
         }catch (Exception ex){
             ex.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
@@ -101,19 +115,21 @@ public class AdminEstudiantes_bean {
 
 
     }
-    public void copyedit(Estudiante e) {
+    public void copyedit(Profesor e) {
         try{
-        if(e!=null){
-            //entidad_editar=bd.copiarEstudiante(e);
-            entidad=bd.copiarEstudiante(e);
-        }
+            if(e!=null){
+
+                entidad=bd.copiarProfesor(e);
+            }
         }catch (Exception ex){
             responderException(ex);
         }
-     }
-//     public void alApretarEnCancelarEditar(){
-//         entidad_editar=bd.copiarEstudiante(entidad);
-//     }
+    }
+
+    public boolean verSiEsEstudiante(){
+        return esEstudiante;
+    }
+
     public void edit(){
         try{
             Universitario u=bd.obtenerUniversitario(entidad);
@@ -124,31 +140,31 @@ public class AdminEstudiantes_bean {
                 u.setDescripcion(u.getDescripcion().trim());
             }
 
-            Estudiante finded=bd.obtenerEstudiante(entidad);
+            Profesor finded=bd.obtenerProfesor(entidad);
             if(finded == null){
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                        , "Existen errores al editar el Estudiante", "Estudiante inexistente"));
+                        , "Existen errores al editar el Profesor", "Profesor inexistente"));
             }
             else{
                 if((!bd.obtenerUniversitario(finded).getNombre().equals(u.getNombre()))
-                        &&bd.obtenerEstudiante(u.getNombre())!=null
+                        &&bd.obtenerProfesor(u.getNombre())!=null
                 ){
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
                             , "Ya existe una persona en la universidad con este nombre", ""));
                     PrimeFaces.current().ajax().update("form:messages");
                     return;
                 }
-
-                if(bd.editar_Estudiante_ConSu_Universitario(entidad)==null){
+                entidad.setEspecialidad(entidad.getEspecialidad().trim());
+                if(bd.editar_Profesor_ConSu_Universitario(entidad)==null){
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                            , "Existen errores al editar el Estudiante", "Errores en el formulario"));
+                            , "Existen errores al editar el Profesor", "Errores en el formulario"));
 
 
                 }
                 else{
 
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
-                            , "Estudiante Actualizado", ""));
+                            , "Profesor Actualizado", ""));
 
                     init();
 
@@ -167,16 +183,16 @@ public class AdminEstudiantes_bean {
     }
     public void delete(){
         try{
-        if(entidad==null)
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                    , "Existen errores al eliminar el Estudiante", "Estudiante inexistente"));
-        else {
+            if(entidad==null)
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                        , "Existen errores al eliminar el Profesor", "Profesor inexistente"));
+            else {
 
-            if (bd.eliminar_Estudiante(entidad)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
-                        , "Estudiante Eliminado", ""));
+                if (bd.eliminar_Profesor(entidad)) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
+                            , "Profesor Eliminado", ""));
+                }
             }
-        }
 
         }catch (Exception ex){
             ex.printStackTrace();
@@ -186,12 +202,12 @@ public class AdminEstudiantes_bean {
         init();
         PrimeFaces.current().ajax().update("form:messages", "form:"+ID_DATA_TABLE);
     }
-    public  Estudiante getEntidad() {
+    public  Profesor getEntidad() {
         return entidad;
     }
 
-    public  void setEntidad(Estudiante entidad) {
-        AdminEstudiantes_bean.entidad = entidad;
+    public  void setEntidad(Profesor entidad) {
+        this.entidad = entidad;
     }
 
     public  String getNombre() {
@@ -199,7 +215,7 @@ public class AdminEstudiantes_bean {
     }
 
     public  void setNombre(String nombre) {
-        AdminEstudiantes_bean.nombre = nombre;
+        this.nombre = nombre;
     }
 
     public  String getFacultad() {
@@ -207,7 +223,7 @@ public class AdminEstudiantes_bean {
     }
 
     public  void setFacultad(String facultad) {
-        AdminEstudiantes_bean.facultad = facultad;
+        this.facultad = facultad;
     }
 
     public  String getCarrera() {
@@ -215,7 +231,7 @@ public class AdminEstudiantes_bean {
     }
 
     public  void setCarrera(String carrera) {
-        AdminEstudiantes_bean.carrera = carrera;
+        this.carrera = carrera;
     }
 
     public  String getDescripcion() {
@@ -223,7 +239,7 @@ public class AdminEstudiantes_bean {
     }
 
     public  void setDescripcion(String descripcion) {
-        AdminEstudiantes_bean.descripcion = descripcion;
+        this.descripcion = descripcion;
     }
 
     public int getCurso() {
@@ -242,19 +258,27 @@ public class AdminEstudiantes_bean {
         this.semestre = semestre;
     }
 
-    public  List<Estudiante> getLista_de_entidades() {
+    public  List<Profesor> getLista_de_entidades() {
         return lista_de_entidades;
     }
 
-    public  void setLista_de_entidades(List<Estudiante> lista_de_entidades) {
+    public  void setLista_de_entidades(List<Profesor> lista_de_entidades) {
         this.lista_de_entidades = lista_de_entidades;
     }
 
-//    public  Estudiante getEntidad_editar() {
-//        return entidad_editar;
-//    }
-//
-//    public  void setEntidad_editar(Estudiante entidad_editar) {
-//        this.entidad_editar = entidad_editar;
-//    }
+    public String getEspecialidad() {
+        return especialidad;
+    }
+
+    public void setEspecialidad(String especialidad) {
+        this.especialidad = especialidad;
+    }
+
+    public boolean isEsEstudiante() {
+        return esEstudiante;
+    }
+
+    public void setEsEstudiante(boolean esEstudiante) {
+        this.esEstudiante = esEstudiante;
+    }
 }
