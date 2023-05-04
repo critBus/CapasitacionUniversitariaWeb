@@ -15,6 +15,32 @@ import java.util.concurrent.ExecutionException;
 public class RestUniversitario {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/Universitario/";
+	public Universitario findById(int id) {
+		Universitario universitario = null;
+		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
+		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+		try {
+			if(response.get().statusCode() == 500){
+				response.join();
+				return null;
+			}else {
+				try {
+					universitario = JSONUtils.covertFromJsonToObject(response.get().body(), Universitario.class);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				response.join();
+				return universitario;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return universitario;
+	}
 	//sending request to retrieve all universitarios available.
 	public List<Universitario> findAll() {
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
@@ -77,8 +103,8 @@ public class RestUniversitario {
 		return false;
 	}
 	//send request to delete the universitario by its universitarioname
-	public boolean delete(String universitarioname) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+universitarioname)).DELETE().build();
+	public boolean delete(Integer id) {
+		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
 			if(response.get().statusCode() == 500) {

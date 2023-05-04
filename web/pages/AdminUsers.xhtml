@@ -37,41 +37,41 @@
                 </div>
                 <div class="row">
                     <div class="col col-md-12">
-                    <p:dataTable tableStyleClass="table-striped" id="dt-user" var="user" value="#{adminUsers_bean.list_users}" reflow="true" styleClass="table"
+                    <p:dataTable tableStyleClass="table-striped" id="dt-user" var="entidad" value="#{adminUsers_bean.list_users}" reflow="true" styleClass="table"
                                  paginator="true" rows="10" paginatorPosition="bottom">
                         <f:facet name="header">
                             <div class="table-header">
                                 <span style="font-weight: bold">Usuarios</span>
                             </div>
                         </f:facet>
-                        <p:column headerText="Nombre de usuario" filterBy="#{user.username}" sortBy="#{user.username}">
-                            <h:outputText value="#{user.username}"/>
+                        <p:column headerText="Nombre de usuario" filterBy="#{entidad.username}" sortBy="#{entidad.username}">
+                            <h:outputText value="#{entidad.username}"/>
                         </p:column>
-                        <p:column headerText="Identificaci&oacute;n" filterBy="#{user.identificacion}" sortBy="#{user.identificacion}">
-                            <h:outputText value="#{user.identificacion}"/>
+                        <p:column headerText="Identificaci&oacute;n" filterBy="#{entidad.identificacion}" sortBy="#{entidad.identificacion}">
+                            <h:outputText value="#{entidad.identificacion}"/>
                         </p:column>
-                        <p:column headerText="Nombre" filterBy="#{user.nombre}" sortBy="#{user.nombre}">
-                            <h:outputText value="#{user.nombre}"/>
+                        <p:column headerText="Nombre" filterBy="#{entidad.nombre}" sortBy="#{entidad.nombre}">
+                            <h:outputText value="#{entidad.nombre}"/>
                         </p:column>
-                        <p:column headerText="E-Mail" filterBy="#{user.email}" sortBy="#{user.email}">
-                            <h:outputText value="#{user.email}"/>
+                        <p:column headerText="E-Mail" filterBy="#{entidad.email}" sortBy="#{entidad.email}">
+                            <h:outputText value="#{entidad.email}"/>
                         </p:column>
-                        <p:column headerText="Estado" filterBy="#{adminUsers_bean.translate_estado(user.enabled)}" sortBy="#{adminUsers_bean.translate_estado(user.enabled)}">
-                            <p:outputLabel style="color: #{adminUsers_bean.translate_color_estado(user.enabled)}" value="#{adminUsers_bean.translate_estado(user.enabled)}"/>
+                        <p:column headerText="Estado" filterBy="#{adminUsers_bean.translate_estado(entidad.enabled)}" sortBy="#{adminUsers_bean.translate_estado(entidad.enabled)}">
+                            <p:outputLabel style="color: #{adminUsers_bean.translate_color_estado(entidad.enabled)}" value="#{adminUsers_bean.translate_estado(entidad.enabled)}"/>
                         </p:column>
-                        <p:column headerText="Passw" filterBy="#{user.password}" sortBy="#{user.password}">
-                            <h:outputText value="#{user.password}"/>
+                        <p:column headerText="Passw" filterBy="#{entidad.password}" sortBy="#{entidad.password}">
+                            <h:outputText value="#{entidad.password}"/>
                         </p:column>
-                        <p:column headerText="Descripci&oacute;n" filterBy="#{user.descripcion}" sortBy="#{user.descripcion}">
-                            <h:outputText value="#{user.descripcion}"/>
+                        <p:column headerText="Descripci&oacute;n" filterBy="#{entidad.descripcion}" sortBy="#{entidad.descripcion}">
+                            <h:outputText value="#{entidad.descripcion}"/>
                         </p:column>
                         <p:column headerText="Opciones" exportable="false">
-                            <p:commandButton icon="ui-icon-info" update=":form:info-user-content" process="@this" oncomplete="PF('infoUserDialog').show()" actionListener="#{adminUsers_bean.copyedit(user)}">
+                            <p:commandButton icon="ui-icon-info" update=":form:info-user-content" process="@this" oncomplete="PF('infoUserDialog').show()" actionListener="#{adminUsers_bean.copyedit(entidad)}">
                             </p:commandButton>
-                            <p:commandButton icon="ui-icon-edit" update=":form:edit-user-content" process="@this" oncomplete="PF('editUserDialog').show()" actionListener="#{adminUsers_bean.copyedit(user)}">
+                            <p:commandButton icon="ui-icon-edit" update=":form:edit-user-content" process="@this" oncomplete="PF('editUserDialog').show()" actionListener="#{adminUsers_bean.copyedit(entidad)}">
                             </p:commandButton>
                             <p:commandButton icon="ui-icon-trash" process="@this" oncomplete="PF('deleteUserDialog').show()">
-                                <f:setPropertyActionListener value="#{user}" target="#{adminUsers_bean.user}"/>
+                                <f:setPropertyActionListener value="#{entidad}" target="#{adminUsers_bean.user}"/>
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>

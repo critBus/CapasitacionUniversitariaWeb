@@ -74,6 +74,19 @@ public class Template_bean {
         return "display: none;";
     }
 
+//    public String obtenerPatron_CaracteresAlfanumericos(){
+//        return "^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ]*[aeiouAEIOUáéíóúÁÉÍÓÚñÑ][a-zA-ZáéíóúÁÉÍÓÚñÑ]*$)[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$";
+//    }
+//    public String obtenerPatron_SoloLetras(){
+//        return "^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ]*[aeiouAEIOUáéíóúÁÉÍÓÚñÑ][a-zA-ZáéíóúÁÉÍÓÚñÑ]*$)[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$";
+//    }
+//    public String obtenerPatron_Nombre(){
+//        return "^(?=.{1,40}$)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)*$";
+//    }
+//    public String obtenerExplicacion_Patron_Nombre(){
+//        return "Solo puede contener palabras que comiencen con mayúsculas, estas solo pueden contener letras y deben de estar separadas por solo un espacio. ";
+//    }
+
     public boolean isRole_admin() {
         return role_admin;
     }
@@ -113,4 +126,6 @@ public class Template_bean {
     public void setUser(Users user) {
         this.user = user;
     }
+
+
 }

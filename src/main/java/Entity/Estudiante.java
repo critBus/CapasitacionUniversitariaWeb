@@ -68,6 +68,12 @@ public class Estudiante implements Serializable {
         this.semestre = semestre;
     }
 
+    public Estudiante(int curso, int semestre, Universitario iduniversitario) {
+        this.curso = curso;
+        this.semestre = semestre;
+        this.iduniversitario = iduniversitario;
+    }
+
     public Integer getId() {
         return id;
     }

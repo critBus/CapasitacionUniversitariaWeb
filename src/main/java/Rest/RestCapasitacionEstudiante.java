@@ -15,6 +15,32 @@ import java.util.concurrent.ExecutionException;
 public class RestCapasitacionEstudiante {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/CapasitacionEstudiante/";
+	public CapasitacionEstudiante findById(int id) {
+		CapasitacionEstudiante capasitacionestudiante = null;
+		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
+		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+		try {
+			if(response.get().statusCode() == 500){
+				response.join();
+				return null;
+			}else {
+				try {
+					capasitacionestudiante = JSONUtils.covertFromJsonToObject(response.get().body(), CapasitacionEstudiante.class);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				response.join();
+				return capasitacionestudiante;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return capasitacionestudiante;
+	}
 	//sending request to retrieve all capasitacionestudiantes available.
 	public List<CapasitacionEstudiante> findAll() {
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
@@ -77,8 +103,8 @@ public class RestCapasitacionEstudiante {
 		return false;
 	}
 	//send request to delete the capasitacionestudiante by its capasitacionestudiantename
-	public boolean delete(String capasitacionestudiantename) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+capasitacionestudiantename)).DELETE().build();
+	public boolean delete(Integer id) {
+		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
 			if(response.get().statusCode() == 500) {

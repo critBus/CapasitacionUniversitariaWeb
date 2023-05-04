@@ -15,6 +15,32 @@ import java.util.concurrent.ExecutionException;
 public class RestProfesor {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/Profesor/";
+	public Profesor findById(int id) {
+		Profesor profesor = null;
+		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
+		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+		try {
+			if(response.get().statusCode() == 500){
+				response.join();
+				return null;
+			}else {
+				try {
+					profesor = JSONUtils.covertFromJsonToObject(response.get().body(), Profesor.class);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				response.join();
+				return profesor;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return profesor;
+	}
 	//sending request to retrieve all profesors available.
 	public List<Profesor> findAll() {
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
@@ -77,8 +103,8 @@ public class RestProfesor {
 		return false;
 	}
 	//send request to delete the profesor by its profesorname
-	public boolean delete(String profesorname) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+profesorname)).DELETE().build();
+	public boolean delete(Integer id) {
+		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
 			if(response.get().statusCode() == 500) {

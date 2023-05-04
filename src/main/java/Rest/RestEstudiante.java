@@ -15,6 +15,32 @@ import java.util.concurrent.ExecutionException;
 public class RestEstudiante {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/Estudiante/";
+	public Estudiante findById(int id) {
+		Estudiante estudiante = null;
+		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
+		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+		try {
+			if(response.get().statusCode() == 500){
+				response.join();
+				return null;
+			}else {
+				try {
+					estudiante = JSONUtils.covertFromJsonToObject(response.get().body(), Estudiante.class);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				response.join();
+				return estudiante;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return estudiante;
+	}
 	//sending request to retrieve all estudiantes available.
 	public List<Estudiante> findAll() {
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
@@ -61,7 +87,7 @@ public class RestEstudiante {
 				.PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500){
+			if(response.get().statusCode() != 200){
 				response.join();
 				return false;
 			} else {
@@ -77,15 +103,15 @@ public class RestEstudiante {
 		return false;
 	}
 	//send request to delete the estudiante by its estudiantename
-	public boolean delete(String estudiantename) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+estudiantename)).DELETE().build();
+	public boolean delete(Integer id) throws Exception{
+		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
-			if(response.get().statusCode() == 500) {
+			if(response.get().statusCode() != 200) {
 				response.join();
 				return false;
 			} else {
-				Estudiante estudiante = JSONUtils.covertFromJsonToObject(response.get().body(), Estudiante.class);
+				//Estudiante estudiante = JSONUtils.covertFromJsonToObject(response.get().body(), Estudiante.class);
 				response.join();
 				return true;
 			}

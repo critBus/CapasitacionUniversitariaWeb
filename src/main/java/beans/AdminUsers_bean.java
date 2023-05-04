@@ -32,34 +32,11 @@ public class AdminUsers_bean {
     private static RestUsers restUsers = new RestUsers();
     private static RestAuthorities restAuthorities = new RestAuthorities();
 
-
-
     public void init(){
         list_users.clear();
 //        clean_variables();
         list_users = restUsers.findAllUsers();
     }
-
-//
-//    public void agregarSiNoHayNinguno(){
-//        init();
-//        if(list_users.isEmpty()){
-//            String nombreUsuario="uno";
-//            String identificacion_2="iden";
-//            String nombre_2="nom";
-//            String email_2="asd@asd";
-//            String password_2=DigestUtils.shaHex("1234");
-//            boolean enabled_2=true;
-//            String descripcion_2="des";
-//            Users user = new Users(nombreUsuario,identificacion_2,nombre_2,email_2,password_2,enabled_2,descripcion_2);
-//            boolean agrego=restUsers.createUser(user);
-//            Authorities auth = new Authorities(nombreUsuario,"ROLE_USER");
-//            restAuthorities.createAuthority(auth);
-//            auth = new Authorities(nombreUsuario,"ROLE_ADMIN");
-//            restAuthorities.createAuthority(auth);
-//        }
-//
-//    }
 
     public List<String> getList_roles() {
         return list_roles;

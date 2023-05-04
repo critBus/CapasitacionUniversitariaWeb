@@ -70,6 +70,13 @@ public class Universitario implements Serializable {
         this.carrera = carrera;
     }
 
+    public Universitario(String nombre, String facultad, String carrera, String descripcion) {
+        this.nombre = nombre;
+        this.facultad = facultad;
+        this.carrera = carrera;
+        this.descripcion = descripcion;
+    }
+
     public Integer getId() {
         return id;
     }

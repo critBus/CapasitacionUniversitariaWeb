@@ -15,6 +15,32 @@ import java.util.concurrent.ExecutionException;
 public class RestCapasitacion {
 	private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private static final String serviceURL = "http://localhost:8081/Capasitacion/";
+	public Capasitacion findById(int id) {
+		Capasitacion capasitacion = null;
+		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+id)).GET().build();
+		CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+		try {
+			if(response.get().statusCode() == 500){
+				response.join();
+				return null;
+			}else {
+				try {
+					capasitacion = JSONUtils.covertFromJsonToObject(response.get().body(), Capasitacion.class);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				response.join();
+				return capasitacion;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return capasitacion;
+	}
 	//sending request to retrieve all capasitacions available.
 	public List<Capasitacion> findAll() {
 		HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
@@ -77,8 +103,8 @@ public class RestCapasitacion {
 		return false;
 	}
 	//send request to delete the capasitacion by its capasitacionname
-	public boolean delete(String capasitacionname) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+capasitacionname)).DELETE().build();
+	public boolean delete(Integer id) {
+		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
 		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
 		try {
 			if(response.get().statusCode() == 500) {
