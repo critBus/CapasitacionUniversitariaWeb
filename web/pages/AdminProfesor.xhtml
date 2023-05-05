@@ -49,15 +49,21 @@
                         <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
                             <h:outputText value="#{entidad.iduniversitario.nombre}"/>
                         </p:column>
-                        <p:column headerText="Facultad" filterBy="#{entidad.iduniversitario.facultad}" sortBy="#{entidad.iduniversitario.facultad}">
-                            <h:outputText value="#{entidad.iduniversitario.facultad}"/>
+                        <p:column headerText="Facultad" filterBy="#{entidad.facultad}" sortBy="#{entidad.facultad}">
+                            <h:outputText value="#{entidad.facultad}"/>
                         </p:column>
                         <p:column headerText="Carrera"
-                                  filterBy="#{entidad.iduniversitario.carrera}"
-                                  sortBy="#{entidad.iduniversitario.carrera}">
-                            <h:outputText value="#{entidad.iduniversitario.carrera}"/>
+                                  filterBy="#{entidad.carrera}"
+                                  sortBy="#{entidad.carrera}">
+                            <h:outputText value="#{entidad.carrera}"/>
                         </p:column>
-
+                        <p:column headerText="Estudiante"
+                                  filterBy="#{adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}"
+                                  sortBy="#{adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}">
+                            <h:outputText
+                                    style="color: #{adminProfesores_bean.getEstiloEnTablaEsEstudiante(entidad)};"
+                                    value="#{adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}"/>
+                        </p:column>
                         <p:column headerText="Opciones" exportable="false">
                             <p:commandButton icon="ui-icon-info" update=":form:info-content"
                                              process="@this" oncomplete="PF('infoDialog').show()"
@@ -78,13 +84,7 @@
                     </div>
                 </div>
 
-<!--                <p:column headerText="Estudiante"-->
-<!--                          filterBy="# {adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}"-->
-<!--                          sortBy="# {adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}">-->
-<!--                    <h:outputText-->
-<!--                            style="color: # {adminProfesores_bean.getEstiloEnTablaEsEstudiante(entidad)};"-->
-<!--                            value="# {adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}"/>-->
-<!--                </p:column>-->
+
 
 <!--                <p:column headerText="Especialidad" filterBy="# {entidad.especialidad}" sortBy="# {entidad.especialidad}">-->
 <!--                    <h:outputText value="# {entidad.especialidad}"/>-->
@@ -227,7 +227,7 @@
                             </div>
                             <div class="p-field">
                                 <p:outputLabel for="idFacultadEdit">Facultad: </p:outputLabel>
-                                <p:inputText id="idFacultadEdit" value="#{adminProfesores_bean.entidad.iduniversitario.facultad}"
+                                <p:inputText id="idFacultadEdit" value="#{adminProfesores_bean.entidad.facultad}"
                                              required="true"
                                              mensajeParaValidacion="Introduzca un nombre de facultad correcto"
                                              validator="#{validaciones_bean.validarConLetras}"
@@ -239,7 +239,7 @@
                             </div>
                             <div class="p-field">
                                 <p:outputLabel for="idCarreraEdit">Carrera: </p:outputLabel>
-                                <p:inputText id="idCarreraEdit" value="#{adminProfesores_bean.entidad.iduniversitario.carrera}"
+                                <p:inputText id="idCarreraEdit" value="#{adminProfesores_bean.entidad.carrera}"
                                              mensajeParaValidacion="Introduzca un nombre de carrera correcto"
                                              validator="#{validaciones_bean.validarConLetras}"
                                              requiredMessage="El nombre de la carrera no puede estar vacío "
@@ -275,7 +275,31 @@
                             <p:outputPanel id="idPanelEsEstudiante_EditarProfesor"
                                            style="#{adminProfesores_bean.stiloSiEsEstudiante()}">
                                 <div class="p-field">
-                                    <p:outputLabel for="idCursoEdit">Curso: </p:outputLabel>
+                                    <p:outputLabel for="idFacultadEstudianteEdit">Facultad del Estudiante: </p:outputLabel>
+                                    <p:inputText id="idFacultadEstudianteEdit" value="#{adminProfesores_bean.facultad_estudiante}"
+                                                 required="#{adminProfesores_bean.verSiEsEstudiante()}"
+                                                 mensajeParaValidacion="Introduzca un nombre de facultad para el estudiante correcto"
+                                                 validator="#{validaciones_bean.validarConLetras}"
+                                                 requiredMessage="El nombre de la facultad para el estudiante no puede estar vacío "
+                                    >
+                                        <!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_CaracteresAlfanumericos()}" />-->
+
+                                    </p:inputText>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idCarreraEstudianteEdit">Carrera del Estudiante: </p:outputLabel>
+                                    <p:inputText id="idCarreraEstudianteEdit" value="#{adminProfesores_bean.carrera_estudiante}"
+                                                 mensajeParaValidacion="Introduzca un nombre de carrera correcto para el estudiante "
+                                                 validator="#{validaciones_bean.validarConLetras}"
+                                                 requiredMessage="El nombre de la carrera para el estudiante no puede estar vacío "
+                                                 required="#{adminProfesores_bean.verSiEsEstudiante()}">
+                                        <!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_CaracteresAlfanumericos()}" />-->
+
+                                    </p:inputText>
+                                </div>
+
+                                <div class="p-field">
+                                    <p:outputLabel for="idCursoEdit">Curso del Estudiante: </p:outputLabel>
                                     <p:spinner required="#{adminProfesores_bean.verSiEsEstudiante()}"
                                                id="idCursoEdit" value="#{adminProfesores_bean.curso}" min="1" max="5"
 
@@ -285,12 +309,13 @@
                                     </p:spinner>
                                 </div>
                                 <div class="p-field">
-                                    <p:outputLabel for="idSemestreEdit">Semestre: </p:outputLabel>
+                                    <p:outputLabel for="idSemestreEdit">Semestre del Estudiante: </p:outputLabel>
                                     <p:spinner required="#{adminProfesores_bean.verSiEsEstudiante()}"
                                                id="idSemestreEdit" value="#{adminProfesores_bean.semestre}" min="1" max="2"
                                                converterMessage="El semestre debe de ser un numero de entre 1 y 2"
                                     />
                                 </div>
+
                             </p:outputPanel>
 
 <!--                            <div class="p-field">-->
@@ -340,11 +365,11 @@
                             </div>
                             <div class="p-field">
                                 <strong>Facultad</strong>
-                                <p:outputLabel>#{adminProfesores_bean.entidad.iduniversitario.facultad}</p:outputLabel>
+                                <p:outputLabel>#{adminProfesores_bean.entidad.facultad}</p:outputLabel>
                             </div>
                             <div class="p-field">
                                 <strong>Carrera: </strong>
-                                <p:outputLabel>#{adminProfesores_bean.entidad.iduniversitario.carrera}</p:outputLabel>
+                                <p:outputLabel>#{adminProfesores_bean.entidad.carrera}</p:outputLabel>
                             </div>
                             <div class="p-field">
                             <strong>Especialidad: </strong>
@@ -460,6 +485,30 @@
 
                             <p:outputPanel id="idPanelEsEstudiante_AgregarProfesor2"
                                            style="#{adminProfesores_bean.stiloSiEsEstudiante()}">
+                                <div class="p-field">
+                                    <p:outputLabel for="idFacultadAgregarEstudiante">Facultad del Estudiante: </p:outputLabel>
+                                    <p:inputText id="idFacultadAgregarEstudiante" value="#{adminProfesores_bean.facultad_estudiante}"
+                                                 required="#{adminProfesores_bean.verSiEsEstudiante()}"
+                                                 mensajeParaValidacion="Introduzca un nombre de facultad correcto para el Estudiante"
+                                                 validator="#{validaciones_bean.validarConLetras}"
+                                                 requiredMessage="El nombre de la facultad para el Estudiante no puede estar vacío "
+                                    >
+
+                                    </p:inputText>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idCarreraAgregarEstudiante">Carrera del Estudiante: </p:outputLabel>
+                                    <p:inputText id="idCarreraAgregarEstudiante" value="#{adminProfesores_bean.carrera_estudiante}"
+                                                 required="#{adminProfesores_bean.verSiEsEstudiante()}"
+                                                 mensajeParaValidacion="Introduzca un nombre de carrera correcto para el Estudiante"
+                                                 validator="#{validaciones_bean.validarConLetras}"
+                                                 requiredMessage="El nombre de la carrera para el Estudiante no puede estar vacío "
+                                    >
+
+                                    </p:inputText>
+                                </div>
+
+
                                 <div class="p-field">
                                     <p:outputLabel for="idCurso2">Curso: </p:outputLabel>
                                     <p:spinner required="#{adminProfesores_bean.verSiEsEstudiante()}" id="idCurso2" value="#{adminProfesores_bean.curso}" min="1" max="5"

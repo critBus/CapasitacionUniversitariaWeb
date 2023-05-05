@@ -84,15 +84,14 @@ public class ConexionBD {
         return null;
     }
     public Universitario crearUniversitario(String nombre,
-                                      String facultad,
-                                      String carrera,
+
                                       String descripcion)throws Exception{
         Universitario u=new Universitario();
         int id=obtenerUltimoID_Universitario();
         u.setId(++id);
-        u.setCarrera(carrera);
+        //u.setCarrera(carrera);
         u.setDescripcion(descripcion);
-        u.setFacultad(facultad);
+        //u.setFacultad(facultad);
         u.setNombre(nombre);
         if(restUniversitario.create(u)){
             u=obtenerUniversitario(nombre);
@@ -107,6 +106,8 @@ public class ConexionBD {
         e.setCurso(es.getCurso());
         e.setSemestre(es.getSemestre());
         e.setIduniversitario(copiarUniversitario(es.getIduniversitario()));
+        e.setCarrera(es.getCarrera());
+        e.setFacultad(es.getFacultad());
         e.setId(es.getId());
         return e;
     }
@@ -115,6 +116,8 @@ public class ConexionBD {
 
         e.setEspecialidad(es.getEspecialidad());
         e.setIduniversitario(copiarUniversitario(es.getIduniversitario()));
+        e.setCarrera(es.getCarrera());
+        e.setFacultad(es.getFacultad());
         e.setId(es.getId());
         return e;
     }
@@ -122,19 +125,24 @@ public class ConexionBD {
         Universitario u=new Universitario();
         u.setId(old.getId());
         u.setNombre(old.getNombre());
-        u.setFacultad(old.getFacultad());
+        //u.setFacultad(old.getFacultad());
         u.setDescripcion(old.getDescripcion());
-        u.setCarrera(old.getCarrera());
+        //u.setCarrera(old.getCarrera());
         return u;
     }
-    private Estudiante crearEstudiante(Universitario u
-                                        ,int curso,
+    private Estudiante crearEstudiante(Universitario u,
+                                       String facultad,
+                                       String carrera,
+
+                                        int curso,
                                        int semestre)throws Exception{
         Estudiante e=new Estudiante();
         int id=obtenerUltimoID_Estudiante();
         e.setId(++id);
+        e.setCarrera(carrera);
         e.setCurso(curso);
         e.setSemestre(semestre);
+        e.setFacultad(facultad);
         e.setIduniversitario(u);
         if(restEstudiante.create(e)){
             e=obtenerEstudiante(u.getNombre());
@@ -148,9 +156,9 @@ public class ConexionBD {
                                       String descripcion,
                                       int curso,
                                       int semestre)throws Exception{
-        Universitario u=crearUniversitario(nombre,facultad,carrera,descripcion);
+        Universitario u=crearUniversitario(nombre,descripcion);
         if(u!=null){
-            return crearEstudiante(u,curso,semestre);
+            return crearEstudiante(u,facultad,carrera,curso,semestre);
         }
         return null;
     }
@@ -159,12 +167,14 @@ public class ConexionBD {
                                       String carrera,
                                       String descripcion,
                                     String especialidad)throws Exception{
-        Universitario u=crearUniversitario(nombre,facultad,carrera,descripcion);
+        Universitario u=crearUniversitario(nombre,descripcion);
         if(u!=null){
             Profesor e=new Profesor();
             int id=obtenerUltimoID_Profesor();
             e.setId(++id);
             e.setEspecialidad(especialidad);
+            e.setCarrera(carrera);
+            e.setFacultad(facultad);
             e.setIduniversitario(u);
             if(restProfesor.create(e)){
                 e=obtenerProfesor(nombre);
@@ -179,10 +189,13 @@ public class ConexionBD {
                                   String descripcion,
                                   String especialidad,
                                             int curso,
-                                            int semestre)throws Exception{
+                                            int semestre,
+                                            String facultad_Estudiante,
+                                            String carrera_Estudiante
+    )throws Exception{
         Profesor p=crearProfesor(nombre,facultad,carrera,descripcion,especialidad);
         if(p!=null){
-            Estudiante e= crearEstudiante(obtenerUniversitario(p),curso,semestre);
+            Estudiante e= crearEstudiante(obtenerUniversitario(p),facultad_Estudiante,carrera_Estudiante,curso,semestre);
             if(e!=null){
                 return p;
             }
@@ -229,7 +242,8 @@ public class ConexionBD {
     }
 
     public Profesor editar_ProfesorEstudiante_ConSu_Universitario(Profesor p
-            ,boolean esEstudiante,int curso,int semestre)throws Exception{
+            ,boolean esEstudiante,int curso,int semestre,String facultad_Estudiante,
+                                                                  String carrera_Estudiante)throws Exception{
 
 
         p=editar_Profesor_ConSu_Universitario(p);
@@ -245,6 +259,8 @@ public class ConexionBD {
             if(elProfesorEsAnteriormenteEstudiante){
                 Estudiante e=obtenerEstudiante(p);
                 if(e!=null){
+                    e.setFacultad(facultad_Estudiante);
+                    e.setCarrera(carrera_Estudiante);
                     e.setCurso(curso);
                     e.setSemestre(semestre);
                     e=editar_Estudiante(e);
@@ -253,7 +269,7 @@ public class ConexionBD {
                     }
                 }
             }else{
-                Estudiante e=crearEstudiante(u,curso,semestre);
+                Estudiante e=crearEstudiante(u,facultad_Estudiante,carrera_Estudiante,curso,semestre);
                 if(e!=null){
                     return p;
                 }
@@ -261,9 +277,12 @@ public class ConexionBD {
 
         }else if(elProfesorEsAnteriormenteEstudiante){
             Estudiante e=obtenerEstudiante(p);
-            if(e!=null){
-                eliminar_Estudiante(e);
+            if(e!=null&&eliminar_Estudiante(e)){
+                return p;
+
             }
+        }else{
+            return p;
         }
 
         return null;

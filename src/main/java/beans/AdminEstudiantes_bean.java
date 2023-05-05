@@ -118,8 +118,8 @@ public class AdminEstudiantes_bean {
         try{
             Universitario u=bd.obtenerUniversitario(entidad);
             u.setNombre(u.getNombre().trim());
-            u.setCarrera(u.getCarrera().trim());
-            u.setFacultad(u.getFacultad().trim());
+//            u.setCarrera(u.getCarrera().trim());
+//            u.setFacultad(u.getFacultad().trim());
             if(u.getDescripcion()!=null){
                 u.setDescripcion(u.getDescripcion().trim());
             }
@@ -138,7 +138,8 @@ public class AdminEstudiantes_bean {
                     PrimeFaces.current().ajax().update("form:messages");
                     return;
                 }
-
+                entidad.setCarrera(entidad.getCarrera().trim());
+                entidad.setFacultad(entidad.getFacultad().trim());
                 if(bd.editar_Estudiante_ConSu_Universitario(entidad)==null){
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
                             , "Existen errores al editar el Estudiante", "Errores en el formulario"));

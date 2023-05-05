@@ -14,24 +14,27 @@ import java.util.List;
 @ManagedBean
 @SessionScoped
 public class AdminProfesores_bean {
-    private static List<Profesor> lista_de_entidades = new ArrayList<Profesor>();
+    private  List<Profesor> lista_de_entidades = new ArrayList<Profesor>();
 
-    private static String nombre = "";
-    private  static String facultad = "";
-    private  static String carrera = "";
+    private  String nombre = "";
+    private   String facultad = "";
+    private   String carrera = "";
 
-    private static  String descripcion = "";
-    private static  int curso=1;
-    private static  int semestre=1;
+    private   String descripcion = "";
+    private   int curso=1;
+    private   int semestre=1;
     
-    public static  String especialidad= "";
-    public  static boolean esEstudiante=false;
+    public   String especialidad= "";
+    public   boolean esEstudiante=false;
 
     public static  String ID_DLG_ADD="addDialog2";
     public static  String ID_DLG_EDIT="editDialog";
     public static  String ID_DATA_TABLE="dt-entidad";
 
-    private static Profesor entidad;
+    private   String facultad_estudiante = "";
+    private   String carrera_estudiante = "";
+
+    private  Profesor entidad;
 //    private static Profesor entidad_editar;
 
     private static ConexionBD bd=new ConexionBD();
@@ -65,6 +68,8 @@ public class AdminProfesores_bean {
 
         esEstudiante=false;
         especialidad="";
+        facultad_estudiante="";
+        carrera_estudiante="";
     }
 
     public void create(){
@@ -83,10 +88,13 @@ public class AdminProfesores_bean {
                 descripcion=descripcion.trim();
             }
             especialidad=especialidad.trim();
+            facultad_estudiante=facultad_estudiante.trim();
+            carrera_estudiante=carrera_estudiante.trim();
 
             Profesor e=null;
             if(esEstudiante){
-                e=bd.crearProfesorEstudiante(nombre,facultad,carrera,descripcion,especialidad,curso,semestre);
+                e=bd.crearProfesorEstudiante(nombre,facultad,carrera,descripcion
+                        ,especialidad,curso,semestre,facultad_estudiante,carrera_estudiante);
             }else{
                 e=bd.crearProfesor(nombre,facultad,carrera,descripcion,especialidad);
             }
@@ -125,6 +133,8 @@ public class AdminProfesores_bean {
                     Estudiante es=bd.obtenerEstudiante(e);
                     curso=es.getCurso();
                     semestre=es.getSemestre();
+                    facultad_estudiante=es.getFacultad();
+                    carrera_estudiante=es.getCarrera();
                 }
             }
         }catch (Exception ex){
@@ -158,8 +168,8 @@ public class AdminProfesores_bean {
         try{
             Universitario u=bd.obtenerUniversitario(entidad);
             u.setNombre(u.getNombre().trim());
-            u.setCarrera(u.getCarrera().trim());
-            u.setFacultad(u.getFacultad().trim());
+//            u.setCarrera(u.getCarrera().trim());
+//            u.setFacultad(u.getFacultad().trim());
             if(u.getDescripcion()!=null){
                 u.setDescripcion(u.getDescripcion().trim());
             }
@@ -179,7 +189,12 @@ public class AdminProfesores_bean {
                     return;
                 }
                 entidad.setEspecialidad(entidad.getEspecialidad().trim());
-                if(bd.editar_ProfesorEstudiante_ConSu_Universitario(entidad,esEstudiante,curso,semestre)==null){
+                entidad.setFacultad(entidad.getFacultad().trim());
+                entidad.setCarrera(entidad.getCarrera().trim());
+                facultad_estudiante=facultad_estudiante.trim();
+                carrera_estudiante=carrera_estudiante.trim();
+                if(bd.editar_ProfesorEstudiante_ConSu_Universitario(entidad,esEstudiante
+                        ,curso,semestre,facultad_estudiante,carrera_estudiante)==null){
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
                             , "Existen errores al editar el Profesor", "Errores en el formulario"));
 
@@ -205,6 +220,23 @@ public class AdminProfesores_bean {
 
         PrimeFaces.current().ajax().update("form:messages", "form:"+ID_DATA_TABLE);
     }
+
+    public String getFacultad_estudiante() {
+        return facultad_estudiante;
+    }
+
+    public void setFacultad_estudiante(String facultad_estudiante) {
+        this.facultad_estudiante = facultad_estudiante;
+    }
+
+    public String getCarrera_estudiante() {
+        return carrera_estudiante;
+    }
+
+    public void setCarrera_estudiante(String carrera_estudiante) {
+        this.carrera_estudiante = carrera_estudiante;
+    }
+
     public void delete(){
         try{
             if(entidad==null)

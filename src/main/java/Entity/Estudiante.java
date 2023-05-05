@@ -5,23 +5,9 @@
  */
 package Entity;
 
-import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 //import javax.xml.bind.annotation.XmlRootElement;
-//import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
 
 /**
  *
@@ -33,6 +19,8 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "Estudiante.findAll", query = "SELECT e FROM Estudiante e")
     , @NamedQuery(name = "Estudiante.findById", query = "SELECT e FROM Estudiante e WHERE e.id = :id")
+    , @NamedQuery(name = "Estudiante.findByFacultad", query = "SELECT e FROM Estudiante e WHERE e.facultad = :facultad")
+    , @NamedQuery(name = "Estudiante.findByCarrera", query = "SELECT e FROM Estudiante e WHERE e.carrera = :carrera")
     , @NamedQuery(name = "Estudiante.findByCurso", query = "SELECT e FROM Estudiante e WHERE e.curso = :curso")
     , @NamedQuery(name = "Estudiante.findBySemestre", query = "SELECT e FROM Estudiante e WHERE e.semestre = :semestre")})
 public class Estudiante implements Serializable {
@@ -44,13 +32,19 @@ public class Estudiante implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
+    @Column(name = "facultad")
+    private String facultad;
+    @Basic(optional = false)
+    @Column(name = "carrera")
+    private String carrera;
+    @Basic(optional = false)
     @Column(name = "curso")
     private int curso;
     @Basic(optional = false)
     @Column(name = "semestre")
     private int semestre;
     @JoinColumn(name = "iduniversitario", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Universitario iduniversitario;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestudiante")
 //    private List<CapasitacionEstudiante> capasitacionEstudianteList;
@@ -62,16 +56,12 @@ public class Estudiante implements Serializable {
         this.id = id;
     }
 
-    public Estudiante(Integer id, int curso, int semestre) {
+    public Estudiante(Integer id, String facultad, String carrera, int curso, int semestre) {
         this.id = id;
+        this.facultad = facultad;
+        this.carrera = carrera;
         this.curso = curso;
         this.semestre = semestre;
-    }
-
-    public Estudiante(int curso, int semestre, Universitario iduniversitario) {
-        this.curso = curso;
-        this.semestre = semestre;
-        this.iduniversitario = iduniversitario;
     }
 
     public Integer getId() {
@@ -80,6 +70,22 @@ public class Estudiante implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getFacultad() {
+        return facultad;
+    }
+
+    public void setFacultad(String facultad) {
+        this.facultad = facultad;
+    }
+
+    public String getCarrera() {
+        return carrera;
+    }
+
+    public void setCarrera(String carrera) {
+        this.carrera = carrera;
     }
 
     public int getCurso() {

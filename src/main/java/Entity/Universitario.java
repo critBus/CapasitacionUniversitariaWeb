@@ -5,19 +5,9 @@
  */
 package Entity;
 
-import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 //import javax.xml.bind.annotation.XmlRootElement;
-//import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
 
 /**
  *
@@ -30,8 +20,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "Universitario.findAll", query = "SELECT u FROM Universitario u")
     , @NamedQuery(name = "Universitario.findById", query = "SELECT u FROM Universitario u WHERE u.id = :id")
     , @NamedQuery(name = "Universitario.findByNombre", query = "SELECT u FROM Universitario u WHERE u.nombre = :nombre")
-    , @NamedQuery(name = "Universitario.findByFacultad", query = "SELECT u FROM Universitario u WHERE u.facultad = :facultad")
-    , @NamedQuery(name = "Universitario.findByCarrera", query = "SELECT u FROM Universitario u WHERE u.carrera = :carrera")
     , @NamedQuery(name = "Universitario.findByDescripcion", query = "SELECT u FROM Universitario u WHERE u.descripcion = :descripcion")})
 public class Universitario implements Serializable {
 
@@ -43,18 +31,12 @@ public class Universitario implements Serializable {
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @Column(name = "facultad")
-    private String facultad;
-    @Basic(optional = false)
-    @Column(name = "carrera")
-    private String carrera;
     @Column(name = "descripcion")
     private String descripcion;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iduniversitario")
-//    private List<Estudiante> estudianteList;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iduniversitario")
-//    private List<Profesor> profesorList;
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "iduniversitario")
+//    private Estudiante estudiante;
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "iduniversitario")
+//    private Profesor profesor;
 
     public Universitario() {
     }
@@ -63,18 +45,9 @@ public class Universitario implements Serializable {
         this.id = id;
     }
 
-    public Universitario(Integer id, String nombre, String facultad, String carrera) {
+    public Universitario(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.facultad = facultad;
-        this.carrera = carrera;
-    }
-
-    public Universitario(String nombre, String facultad, String carrera, String descripcion) {
-        this.nombre = nombre;
-        this.facultad = facultad;
-        this.carrera = carrera;
-        this.descripcion = descripcion;
     }
 
     public Integer getId() {
@@ -93,22 +66,6 @@ public class Universitario implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getFacultad() {
-        return facultad;
-    }
-
-    public void setFacultad(String facultad) {
-        this.facultad = facultad;
-    }
-
-    public String getCarrera() {
-        return carrera;
-    }
-
-    public void setCarrera(String carrera) {
-        this.carrera = carrera;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
@@ -117,22 +74,20 @@ public class Universitario implements Serializable {
         this.descripcion = descripcion;
     }
 
-//    @XmlTransient
-//    public List<Estudiante> getEstudianteList() {
-//        return estudianteList;
+//    public Estudiante getEstudiante() {
+//        return estudiante;
 //    }
 //
-//    public void setEstudianteList(List<Estudiante> estudianteList) {
-//        this.estudianteList = estudianteList;
+//    public void setEstudiante(Estudiante estudiante) {
+//        this.estudiante = estudiante;
 //    }
 //
-//    @XmlTransient
-//    public List<Profesor> getProfesorList() {
-//        return profesorList;
+//    public Profesor getProfesor() {
+//        return profesor;
 //    }
 //
-//    public void setProfesorList(List<Profesor> profesorList) {
-//        this.profesorList = profesorList;
+//    public void setProfesor(Profesor profesor) {
+//        this.profesor = profesor;
 //    }
 
     @Override
@@ -155,20 +110,9 @@ public class Universitario implements Serializable {
         return true;
     }
 
-//    @Override
-//    public String toString() {
-//        return "entidades.Universitario[ id=" + id + " ]";
-//    }
-
-
     @Override
     public String toString() {
-        return "Universitario{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", facultad='" + facultad + '\'' +
-                ", carrera='" + carrera + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                '}';
+        return "entidades.Universitario[ id=" + id + " ]";
     }
+    
 }

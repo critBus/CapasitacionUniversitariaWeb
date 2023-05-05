@@ -47,11 +47,13 @@
                         <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
                             <h:outputText value="#{entidad.iduniversitario.nombre}"/>
                         </p:column>
-                        <p:column headerText="Facultad" filterBy="#{entidad.iduniversitario.facultad}" sortBy="#{entidad.iduniversitario.facultad}">
-                            <h:outputText value="#{entidad.iduniversitario.facultad}"/>
+                        <p:column headerText="Facultad" filterBy="#{entidad.facultad}"
+                                  sortBy="#{entidad.facultad}">
+                            <h:outputText value="#{entidad.facultad}"/>
                         </p:column>
-                        <p:column headerText="Carrera" filterBy="#{entidad.iduniversitario.carrera}" sortBy="#{entidad.iduniversitario.carrera}">
-                            <h:outputText value="#{entidad.iduniversitario.carrera}"/>
+                        <p:column headerText="Carrera" filterBy="#{entidad.carrera}"
+                                  sortBy="#{entidad.carrera}">
+                            <h:outputText value="#{entidad.carrera}"/>
                         </p:column>
                         <p:column headerText="Curso" filterBy="#{entidad.curso}" sortBy="#{entidad.curso}">
                             <h:outputText value="#{entidad.curso}"/>
@@ -179,7 +181,8 @@
                             </div>
                             <div class="p-field">
                                 <p:outputLabel for="idFacultadEdit">Facultad: </p:outputLabel>
-                                <p:inputText id="idFacultadEdit" value="#{adminEstudiantes_bean.entidad.iduniversitario.facultad}"
+                                <p:inputText id="idFacultadEdit"
+                                             value="#{adminEstudiantes_bean.entidad.facultad}"
                                              required="true"
                                              mensajeParaValidacion="Introduzca un nombre de facultad correcto"
                                              validator="#{validaciones_bean.validarConLetras}"
@@ -191,7 +194,8 @@
                             </div>
                             <div class="p-field">
                                 <p:outputLabel for="idCarreraEdit">Carrera: </p:outputLabel>
-                                <p:inputText id="idCarreraEdit" value="#{adminEstudiantes_bean.entidad.iduniversitario.carrera}"
+                                <p:inputText id="idCarreraEdit"
+                                             value="#{adminEstudiantes_bean.entidad.carrera}"
                                              mensajeParaValidacion="Introduzca un nombre de carrera correcto"
                                              validator="#{validaciones_bean.validarConLetras}"
                                              requiredMessage="El nombre de la carrera no puede estar vacío "
@@ -247,11 +251,11 @@
                             </div>
                             <div class="p-field">
                                 <strong>Facultad</strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.iduniversitario.facultad}</p:outputLabel>
+                                <p:outputLabel>#{adminEstudiantes_bean.entidad.facultad}</p:outputLabel>
                             </div>
                             <div class="p-field">
                                 <strong>Carrera: </strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.iduniversitario.carrera}</p:outputLabel>
+                                <p:outputLabel>#{adminEstudiantes_bean.entidad.carrera}</p:outputLabel>
                             </div>
                             <div class="p-field">
                                 <strong>Curso: </strong>
