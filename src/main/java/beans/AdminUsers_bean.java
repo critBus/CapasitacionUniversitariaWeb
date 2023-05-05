@@ -230,6 +230,9 @@ public class AdminUsers_bean {
             }
             if (restUsers.deleteUser(user.getUsername())) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario Eliminado", ""));
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                        , "Errores en el servidor", "No se pudo eliminar el Usuario"));
             }
         }
         init();

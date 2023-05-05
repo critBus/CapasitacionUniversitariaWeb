@@ -201,13 +201,22 @@ public class ConexionBD {
         if(editar_Universitario(u)!=null
         ){
             e.setIduniversitario(obtenerUniversitario(u));
-            if(restEstudiante.update(e)){
-                return  obtenerEstudiante(e);
-            }
+            return editar_Estudiante(e);
+//            if(restEstudiante.update(e)){
+//                return  obtenerEstudiante(e);
+//            }
         }
         return null;
     }
-    public Profesor editar_Profesor_ConSu_Universitario(Profesor e)throws Exception{
+    //es privado pq no lo utilizo en otro lado fuera de esta clase
+    private Estudiante editar_Estudiante(Estudiante e)throws Exception{
+        if(restEstudiante.update(e)){
+            return  obtenerEstudiante(e);
+        }
+        return null;
+    }
+    //es privado pq no lo utilizo en otro lado fuera de esta clase
+    private Profesor editar_Profesor_ConSu_Universitario(Profesor e)throws Exception{
         Universitario u=obtenerUniversitario(e);
         if(editar_Universitario(u)!=null
         ){
@@ -218,11 +227,79 @@ public class ConexionBD {
         }
         return null;
     }
-    public boolean eliminar_Estudiante(Estudiante e)throws Exception{
+
+    public Profesor editar_ProfesorEstudiante_ConSu_Universitario(Profesor p
+            ,boolean esEstudiante,int curso,int semestre)throws Exception{
+
+
+        p=editar_Profesor_ConSu_Universitario(p);
+        if(p==null){
+            return null;
+        }
+        Universitario u=obtenerUniversitario(p);
+        if(u==null){
+            return null;
+        }
+        boolean elProfesorEsAnteriormenteEstudiante=esEstudiante(p);
+        if(esEstudiante){
+            if(elProfesorEsAnteriormenteEstudiante){
+                Estudiante e=obtenerEstudiante(p);
+                if(e!=null){
+                    e.setCurso(curso);
+                    e.setSemestre(semestre);
+                    e=editar_Estudiante(e);
+                    if(e!=null){
+                        return p;
+                    }
+                }
+            }else{
+                Estudiante e=crearEstudiante(u,curso,semestre);
+                if(e!=null){
+                    return p;
+                }
+            }
+
+        }else if(elProfesorEsAnteriormenteEstudiante){
+            Estudiante e=obtenerEstudiante(p);
+            if(e!=null){
+                eliminar_Estudiante(e);
+            }
+        }
+
+        return null;
+    }
+    public boolean eliminar_Estudiante_YDatosDeUniversitarioSinProfesor(Estudiante e)throws Exception{
+        boolean esProfesor=esProfesor(e);
+        Universitario u=obtenerUniversitario(e);
+        if(u==null){
+            return false;
+        }
+        if(eliminar_Estudiante(e)&&!esProfesor){
+            return eliminar_Universitario(u);
+        }
+        return false;
+    }
+    private boolean eliminar_Estudiante(Estudiante e)throws Exception{
         return restEstudiante.delete(e.getId());
     }
-    public boolean eliminar_Profesor(Profesor e)throws Exception{
+    private boolean eliminar_Universitario(Universitario e)throws Exception{
+        return restUniversitario.delete(e.getId());
+    }
+    private boolean eliminar_Profesor(Profesor e)throws Exception{
         return restProfesor.delete(e.getId());
+    }
+    public boolean eliminar_Profesor_Cascade(Profesor p)throws Exception{
+
+        if(esEstudiante(p)){
+            Estudiante e=obtenerEstudiante(p);
+            eliminar_Estudiante(e);
+        }
+        Universitario u=obtenerUniversitario(p);
+        if(u==null){
+            return false;
+        }
+        if(eliminar_Profesor(p)){return eliminar_Universitario(u);}
+        return false;
     }
 
     public int obtenerUltimoID_Universitario()throws Exception{
@@ -257,6 +334,29 @@ public class ConexionBD {
             }
         }
         return mayor;
+    }
+
+    public boolean esEstudiante(Profesor p)throws Exception{
+        return obtenerEstudiante(p)!=null;
+    }
+    public boolean esProfesor(Estudiante p)throws Exception{
+        return obtenerProfesor(p)!=null;
+    }
+    public Estudiante obtenerEstudiante(Profesor p)throws Exception{
+        Universitario u=obtenerUniversitario(p);
+        if(u!=null){
+            return obtenerEstudiante(u.getNombre());
+        }
+        return null;
+
+    }
+    public Profesor obtenerProfesor(Estudiante p)throws Exception{
+        Universitario u=obtenerUniversitario(p);
+        if(u!=null){
+            return obtenerProfesor(u.getNombre());
+        }
+        return null;
+
     }
 
 

@@ -172,9 +172,12 @@ public class AdminEstudiantes_bean {
                     , "Existen errores al eliminar el Estudiante", "Estudiante inexistente"));
         else {
 
-            if (bd.eliminar_Estudiante(entidad)) {
+            if (bd.eliminar_Estudiante_YDatosDeUniversitarioSinProfesor(entidad)) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
                         , "Estudiante Eliminado", ""));
+            }else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                        , "Errores en el servidor", "No se pudo eliminar el Estudiante"));
             }
         }
 

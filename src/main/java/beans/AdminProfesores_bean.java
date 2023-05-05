@@ -14,22 +14,22 @@ import java.util.List;
 @ManagedBean
 @SessionScoped
 public class AdminProfesores_bean {
-    private  List<Profesor> lista_de_entidades = new ArrayList<Profesor>();
+    private static List<Profesor> lista_de_entidades = new ArrayList<Profesor>();
 
-    private  String nombre = "";
-    private  String facultad = "";
-    private  String carrera = "";
+    private static String nombre = "";
+    private  static String facultad = "";
+    private  static String carrera = "";
 
-    private  String descripcion = "";
-    private  int curso=1;
-    private  int semestre=1;
+    private static  String descripcion = "";
+    private static  int curso=1;
+    private static  int semestre=1;
     
-    public  String especialidad= "";
-    public  boolean esEstudiante=false;
+    public static  String especialidad= "";
+    public  static boolean esEstudiante=false;
 
-    public  String ID_DLG_ADD="addDialog";
-    public  String ID_DLG_EDIT="editDialog";
-    public  String ID_DATA_TABLE="dt-entidad";
+    public static  String ID_DLG_ADD="addDialog2";
+    public static  String ID_DLG_EDIT="editDialog";
+    public static  String ID_DATA_TABLE="dt-entidad";
 
     private static Profesor entidad;
 //    private static Profesor entidad_editar;
@@ -103,7 +103,7 @@ public class AdminProfesores_bean {
             }
             else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                        , "Existen errores en el formulario", ""));
+                        , "Existen Errores en el formulario", ""));
             }
         }catch (Exception ex){
             ex.printStackTrace();
@@ -120,14 +120,38 @@ public class AdminProfesores_bean {
             if(e!=null){
 
                 entidad=bd.copiarProfesor(e);
+                esEstudiante=esProfesorEstudiante(e);
+                if(esEstudiante){
+                    Estudiante es=bd.obtenerEstudiante(e);
+                    curso=es.getCurso();
+                    semestre=es.getSemestre();
+                }
             }
         }catch (Exception ex){
             responderException(ex);
         }
     }
 
+
     public boolean verSiEsEstudiante(){
         return esEstudiante;
+    }
+    public String stiloSiEsEstudiante(){
+        return verSiEsEstudiante()?"":"display: none;";
+    }
+    public boolean esProfesorEstudiante(Profesor p){
+        try{
+            return bd.esEstudiante(p);
+        }catch (Exception ex){
+            responderException(ex);
+            return false;
+        }
+    }
+    public String getTextoEnTablaEsEstudiante(Profesor p){
+        return esProfesorEstudiante(p)?"estudiante":"no";
+    }
+    public String getEstiloEnTablaEsEstudiante(Profesor p){
+        return esProfesorEstudiante(p)?"green":"red";
     }
 
     public void edit(){
@@ -155,7 +179,7 @@ public class AdminProfesores_bean {
                     return;
                 }
                 entidad.setEspecialidad(entidad.getEspecialidad().trim());
-                if(bd.editar_Profesor_ConSu_Universitario(entidad)==null){
+                if(bd.editar_ProfesorEstudiante_ConSu_Universitario(entidad,esEstudiante,curso,semestre)==null){
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
                             , "Existen errores al editar el Profesor", "Errores en el formulario"));
 
@@ -188,9 +212,12 @@ public class AdminProfesores_bean {
                         , "Existen errores al eliminar el Profesor", "Profesor inexistente"));
             else {
 
-                if (bd.eliminar_Profesor(entidad)) {
+                if (bd.eliminar_Profesor_Cascade(entidad)) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
                             , "Profesor Eliminado", ""));
+                }else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                            , "Errores en el servidor", "No se pudo eliminar el Profesor"));
                 }
             }
 
