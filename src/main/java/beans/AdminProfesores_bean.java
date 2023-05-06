@@ -146,7 +146,7 @@ public class AdminProfesores_bean {
     public boolean verSiEsEstudiante(){
         return esEstudiante;
     }
-    public String stiloSiEsEstudiante(){
+    public String estiloSiEsEstudiante(){
         return verSiEsEstudiante()?"":"display: none;";
     }
     public boolean esProfesorEstudiante(Profesor p){
@@ -163,7 +163,9 @@ public class AdminProfesores_bean {
     public String getEstiloEnTablaEsEstudiante(Profesor p){
         return esProfesorEstudiante(p)?"green":"red";
     }
-
+    public String obtenerEstiloEnInfoEsEstudiante(){
+        return esEstudiante?"green":"red";
+    }
     public void edit(){
         try{
             Universitario u=bd.obtenerUniversitario(entidad);

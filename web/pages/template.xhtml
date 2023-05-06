@@ -200,6 +200,30 @@
                             <span class="menu-title">Administrar Profesores</span>
                         </p:link>
                     </li>
+                    <li class="nav-item">
+                        <p:link href="/pages/AdminCapasitaciones_Conferencia.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Administrar Conferencias</span>
+                        </p:link>
+                    </li>
+                    <li class="nav-item">
+                        <p:link href="/pages/AdminCapasitaciones_Curso.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Administrar Cursos</span>
+                        </p:link>
+                    </li>
+                    <li class="nav-item">
+                        <p:link href="/pages/AdminCapasitaciones_Seminario.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Administrar Seminarios</span>
+                        </p:link>
+                    </li>
+                    <li class="nav-item">
+                        <p:link href="/pages/AdminCapasitaciones_Taller.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Administrar Talleres</span>
+                        </p:link>
+                    </li>
                     <li class="nav-item" style="#{template_bean.translateRole_visible(template_bean.role_admin)}">
                         <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <i class="mdi mdi-circle-outline menu-icon"></i>

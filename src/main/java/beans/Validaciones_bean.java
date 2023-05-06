@@ -38,6 +38,8 @@ public class Validaciones_bean {
     private final static String MENSAJE_YA_EXISTE_USUARIO = "Ya existe este usuario ";
     private final static String MENSAJE_COINCIDIR_CONTRASENNAS="Tienen que coincidir las contraseñas ";
     private final static String MENSAJE_FECHA_INVALIDA = "La fecha es inválida.";
+    private final static String MENSAJE_FECHAS_INVALIDA = "La fechas son erroneas.";
+    private final static String MENSAJE_LA_FECHA_INCIAL_NO_ES_MENOR_QUE_LA_FINAL="La fecha de inicio tiene que ser anterior a la fecha de fin ";
 
 
     private final static String ATRIBUTO_MSJ_VALIDACION="mensajeParaValidacion";
@@ -262,7 +264,23 @@ public class Validaciones_bean {
             return MENSAJE_FECHA_INVALIDA;
         }
     }
-
+    private static String obtener_validacion_fechas_Capasitacion(Date inicial,Date fin){
+        if(inicial.compareTo(fin)>=0){
+            return MENSAJE_LA_FECHA_INCIAL_NO_ES_MENOR_QUE_LA_FINAL;
+        }
+        return null;
+    }
+    public static boolean validarFechasValidacion(Date inicial,Date fin){
+        String validar_mensaje=obtener_validacion_fechas_Capasitacion(inicial,fin);
+        if (validar_mensaje!=null) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR
+                    , MENSAJE_FECHAS_INVALIDA
+                    , validar_mensaje);
+            FacesContext.getCurrentInstance().addMessage(null,message);
+            return false;
+        }
+        return true;
+    }
 
     public void validarNombre(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try{

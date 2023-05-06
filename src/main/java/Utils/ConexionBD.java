@@ -2,6 +2,8 @@ package Utils;
 import Entity.*;
 import Rest.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ConexionBD {
@@ -14,6 +16,50 @@ public class ConexionBD {
     private RestUniversitario restUniversitario=new RestUniversitario();
     private RestUsers restUsers=new RestUsers();
 
+    private List<CapasitacionEstudiante> obtenerListaDeCapasitacionEstudiante(Capasitacion c)throws Exception{
+        List<CapasitacionEstudiante> lce=obtenerListaDeCapasitacionEstudiante();
+        List<CapasitacionEstudiante> l=new ArrayList<>();
+        for (CapasitacionEstudiante ce :
+                lce) {
+            if (ce.getIdcapasitacion().getId().equals(c.getId())) {
+                l.add(ce);
+            }
+        }
+        return l;
+    }
+    private List<CapasitacionProfesor> obtenerListaDeCapasitacionProfesor(Capasitacion c)throws Exception{
+        List<CapasitacionProfesor> lce=obtenerListaDeCapasitacionProfesor();
+        List<CapasitacionProfesor> l=new ArrayList<>();
+        for (CapasitacionProfesor ce :
+                lce) {
+            if (ce.getIdcapasitacion().getId().equals(c.getId())) {
+                l.add(ce);
+            }
+        }
+        return l;
+    }
+
+    private List<CapasitacionEstudiante> obtenerListaDeCapasitacionEstudiante()throws Exception{
+        return restCapasitacionEstudiante.findAll();
+    }
+    private List<CapasitacionProfesor> obtenerListaDeCapasitacionProfesor()throws Exception{
+        return restCapasitacionProfesor.findAll();
+    }
+    private List<Capasitacion> obtenerListaDeCapasitacion()throws Exception{
+        return restCapasitacion.findAll();
+    }
+    public List<Capasitacion> obtenerListaDeCapasitacion(TipoDeCapasitacion tipo)throws Exception{
+        List<Capasitacion> lc=restCapasitacion.findAll();
+
+        List<Capasitacion> lr=new ArrayList<>();
+        for (Capasitacion c :
+                lc) {
+            if(c.getTipo().equals(tipo.toString())){
+                lr.add(c);
+            }
+        }
+        return lr;
+    }
     public List<Profesor> obtenerListaDeProfesores()throws Exception{
         return restProfesor.findAll();
     }
@@ -28,6 +74,24 @@ public class ConexionBD {
     }
     public Universitario obtenerUniversitario(Estudiante e)throws Exception{
         return e.getIduniversitario();
+    }
+    public Capasitacion obtenerCapasitacion(int id)throws Exception{
+        return restCapasitacion.findById(id);
+    }
+    public Capasitacion obtenerCapasitacion(Capasitacion c)throws Exception{
+        return obtenerCapasitacion(c.getId());
+    }
+    public Capasitacion obtenerCapasitacion(TipoDeCapasitacion tipo,String nombre)throws Exception{
+        nombre=nombre.trim();
+        List<Capasitacion> le=obtenerListaDeCapasitacion(tipo);
+        for (Capasitacion e:
+                le) {
+
+            if(e.getTitulo().equals(nombre)){
+                return e;
+            }
+        }
+        return null;
     }
     public Universitario obtenerUniversitario(String nombre)throws Exception{
         nombre=nombre.trim();
@@ -130,6 +194,21 @@ public class ConexionBD {
         //u.setCarrera(old.getCarrera());
         return u;
     }
+    public Capasitacion copiarCapasitacion(Capasitacion old)throws Exception{
+
+        Capasitacion u=new Capasitacion();
+
+        u.setId(old.getId());
+        u.setTipo(old.getTipo());
+        u.setTitulo(old.getTitulo());
+        u.setTema(old.getTema());
+        u.setPrograma(old.getPrograma());
+        u.setFechaInicio(old.getFechaInicio());
+        u.setFechaFin(old.getFechaFin());
+        u.setEdicion(old.getEdicion());
+
+        return u;
+    }
     private Estudiante crearEstudiante(Universitario u,
                                        String facultad,
                                        String carrera,
@@ -206,6 +285,12 @@ public class ConexionBD {
     public Universitario editar_Universitario(Universitario e)throws Exception{
         if(restUniversitario.update(e)){
             return obtenerUniversitario(e);
+        }
+        return null;
+    }
+    public Capasitacion editar_Capasitacion(Capasitacion e)throws Exception{
+        if(restCapasitacion.update(e)){
+            return obtenerCapasitacion(e);
         }
         return null;
     }
@@ -307,6 +392,12 @@ public class ConexionBD {
     private boolean eliminar_Profesor(Profesor e)throws Exception{
         return restProfesor.delete(e.getId());
     }
+    private boolean eliminar_CapasitacionEstudiante(CapasitacionEstudiante e)throws Exception{
+        return restCapasitacionEstudiante.delete(e.getId());
+    }
+    private boolean eliminar_CapasitacionProfesor(CapasitacionProfesor e)throws Exception{
+        return restCapasitacionProfesor.delete(e.getId());
+    }
     public boolean eliminar_Profesor_Cascade(Profesor p)throws Exception{
 
         if(esEstudiante(p)){
@@ -354,6 +445,17 @@ public class ConexionBD {
         }
         return mayor;
     }
+    public int obtenerUltimoID_Capasitacion()throws Exception{
+        int mayor=0;
+        List<Capasitacion> l=obtenerListaDeCapasitacion();
+        for (Capasitacion u:
+                l) {
+            if(u.getId()>mayor){
+                mayor=u.getId();
+            }
+        }
+        return mayor;
+    }
 
     public boolean esEstudiante(Profesor p)throws Exception{
         return obtenerEstudiante(p)!=null;
@@ -377,6 +479,51 @@ public class ConexionBD {
         return null;
 
     }
+    public Capasitacion crearCapasitacion(String titulo,
+                                           String tema,
+                                           String edicion,
+                                           String programa,
+                                           Date fechaDeInicio,
+                                           Date fechaDeFin,
+                                           TipoDeCapasitacion tipo)throws Exception{
+        Capasitacion u=new Capasitacion();
+        int id=obtenerUltimoID_Capasitacion();
+        u.setId(++id);
+        u.setEdicion(edicion);
+        u.setFechaFin(fechaDeFin);
+        u.setFechaInicio(fechaDeInicio);
+        u.setPrograma(programa);
+        u.setTema(tema);
+        u.setTitulo(titulo);
+        u.setTipo(tipo.toString());
+        if(restCapasitacion.create(u)){
+            u=obtenerCapasitacion(tipo,titulo);
+            return u;
+        }
+        return null;
 
+    }
+    public boolean eliminar_Capasitacion_Cascade(Capasitacion e)throws Exception{
+        List<CapasitacionEstudiante> lce=obtenerListaDeCapasitacionEstudiante(e);
+        for (CapasitacionEstudiante ce :
+                lce) {
+            if(!eliminar_CapasitacionEstudiante(ce)){
+                return false;
+            }
+
+        }
+        List<CapasitacionProfesor> lcp=obtenerListaDeCapasitacionProfesor(e);
+        for (CapasitacionProfesor cp :
+                lcp) {
+            if(!eliminar_CapasitacionProfesor(cp)){
+                return false;
+            }
+        }
+        return eliminar_Capasitacion(e);
+
+    }
+    private boolean eliminar_Capasitacion(Capasitacion e)throws Exception{
+        return restCapasitacion.delete(e.getId());
+    }
 
 }

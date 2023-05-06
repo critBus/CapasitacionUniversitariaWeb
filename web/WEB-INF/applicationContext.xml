@@ -8,6 +8,12 @@
         <security:intercept-url pattern="/index.faces" access="hasAnyRole('ROLE_USER')"/>
         <security:intercept-url pattern="/pages/AdminUsers.faces" access="hasAnyRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminEstudiantes.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminProfesor.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminCapasitaciones_Plantilla.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminCapasitaciones_Curso.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminCapasitaciones_Conferencia.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminCapasitaciones_Seminario.faces" access="hasAnyRole('ROLE_USER')"/>
+        <security:intercept-url pattern="/pages/AdminCapasitaciones_Taller.faces" access="hasAnyRole('ROLE_USER')"/>
         <security:intercept-url pattern="/resources/*" access="permitAll()"/>
         <security:intercept-url pattern="/login.faces" access="isAnonymous()"/>
 

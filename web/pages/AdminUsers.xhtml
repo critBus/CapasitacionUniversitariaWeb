@@ -31,6 +31,7 @@
                     <div class="col col-sm-2">
                         <p:commandButton styleClass="btn btn-primary mr-2" icon="mdi mdi-library-plus" value="Adicionar" process="@this" actionListener="#{adminUsers_bean.clean_variables()}"
                                          oncomplete="PF('addUserDialog').show()"
+                                         update="form:manage-user-content"
                                          style="margin-right: .5rem"/>
                         <br/>
                     </div>
@@ -79,9 +80,12 @@
                 </div>
                 <!--Adicionar usuario dialog-->
                 <p:dialog header="Adicionar usuario" height="400" width="450" showEffect="fade" modal="true"
-                          widgetVar="addUserDialog" id="addUserDialog" responsive="true">
+                          widgetVar="addUserDialog" id="addUserDialog" responsive="true"
+                          onHide="PF('addUserDialog').hide(); #{adminUsers_bean.clean_variables()}"
+                          onShow="#{adminUsers_bean.clean_variables()}"
+                >
                     <p:outputPanel id="manage-user-content" class="ui-fluid">
-                        #{adminUsers_bean.clean_variables()}
+<!--                        # {adminUsers_bean.clean_variables()}-->
                         <p:outputPanel>
                                 <div class="p-field">
                                     <p:outputLabel for="username">Nombre de usuario: </p:outputLabel>
