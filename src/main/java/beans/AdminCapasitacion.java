@@ -75,7 +75,7 @@ public class AdminCapasitacion {
 
         fechaDeFin=new Date();
         fechaDeInicio=DateUtils.subtractHoursFromDate(fechaDeFin,2);
-        System.out.println("se mando a limpiar las variables");
+        //System.out.println("se mando a limpiar las variables");
     }
 
     public void create(){

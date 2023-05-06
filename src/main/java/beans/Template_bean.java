@@ -31,6 +31,15 @@ public class Template_bean {
      */
     private boolean role_admin = false;
     private boolean role_user = false;
+    private String themeName = "Vader"; // tema predeterminado
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
 
     public String currentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

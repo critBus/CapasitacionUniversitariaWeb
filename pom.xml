@@ -28,6 +28,7 @@
         <spring-version>4.3.30.RELEASE</spring-version>
     </properties>
 
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.sun.faces/jsf-api -->
         <dependency>
@@ -53,9 +54,9 @@
             <version>8.0</version>
         </dependency>
         <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>primefaces-themes</artifactId>
-            <version>8.0</version>
+            <groupId>org.primefaces.themes</groupId>
+            <artifactId>all-themes</artifactId>
+            <version>1.0.10</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
         <dependency>
