@@ -16,6 +16,7 @@ import java.util.List;
 import Entity.*;
 import Utils.*;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.DualListModel;
 import org.primefaces.util.ConsumerThree;
 
 @ManagedBean
@@ -40,9 +41,12 @@ public class Validaciones_bean {
     private final static String MENSAJE_FECHA_INVALIDA = "La fecha es inválida.";
     private final static String MENSAJE_FECHAS_INVALIDA = "La fechas son erroneas.";
     private final static String MENSAJE_LA_FECHA_INCIAL_NO_ES_MENOR_QUE_LA_FINAL="La fecha de inicio tiene que ser anterior a la fecha de fin ";
+    private final static String MENSAJE_EL_PROFESOR_QUE_ATIENDE_UNA_CAPASITACION_NO_PUEDE_SER_ESTUDIANTE="Hay un profesor que es estudiante seleccionado en ambas tablas ";
+    private final static String MENSAJE_SELECCION_PROFESORES_ESTUDIANTES_INVALIDA="La selección de estudiantes y profesores es incorrecta ";
 
 
     private final static String ATRIBUTO_MSJ_VALIDACION="mensajeParaValidacion";
+    public  static ConexionBD bd=new ConexionBD();
     private static String obtener_validacion_seguridad_cantrasenna(String s,String confirmar){
         s = s.trim();
         if (s.isEmpty()) {
@@ -270,7 +274,48 @@ public class Validaciones_bean {
         }
         return null;
     }
-    public static boolean validarFechasValidacion(Date inicial,Date fin){
+    private static String obtener_validacion_Listas_ProfesoresEstudiantes(
+            List<Profesor> profesores
+            ,List<Estudiante> estudiantes
+    ){
+        try{
+        List<Profesor> lp=profesores;
+        List<Estudiante> le=estudiantes;
+
+        for (Profesor p :
+                lp) {
+
+            if(bd.esEstudiante(p)){
+                Universitario u=bd.obtenerUniversitario(p);
+                for (Estudiante e :
+                        le) {
+                    if(bd.obtenerUniversitario(e).getId().equals(u.getId())){
+                        return MENSAJE_EL_PROFESOR_QUE_ATIENDE_UNA_CAPASITACION_NO_PUEDE_SER_ESTUDIANTE;
+                    }
+
+                }
+            }
+
+        }
+        }catch (Exception ex){
+            responderException(ex);
+        }
+            return null;
+    }
+    private static boolean validar_Listas_ProfesoresEstudiantes( List<Profesor> profesores
+            ,List<Estudiante> estudiantes){
+        String validar_mensaje=obtener_validacion_Listas_ProfesoresEstudiantes(
+                profesores,estudiantes);
+        if (validar_mensaje!=null) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR
+                    , MENSAJE_SELECCION_PROFESORES_ESTUDIANTES_INVALIDA
+                    , validar_mensaje);
+            FacesContext.getCurrentInstance().addMessage(null,message);
+            return false;
+        }
+        return true;
+    }
+    private static  boolean validarFechas_Capasitacion(Date inicial, Date fin){
         String validar_mensaje=obtener_validacion_fechas_Capasitacion(inicial,fin);
         if (validar_mensaje!=null) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR
@@ -281,7 +326,13 @@ public class Validaciones_bean {
         }
         return true;
     }
-
+    public static  boolean validar_Capasitacion(
+            List<Profesor> profesores
+            ,List<Estudiante> estudiantes
+            ,Date inicial, Date fin
+    ){
+        return validarFechas_Capasitacion(inicial,fin)&&validar_Listas_ProfesoresEstudiantes(profesores,estudiantes);
+    }
     public void validarNombre(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         try{
         String nombre = (String) value;
@@ -316,7 +367,7 @@ public class Validaciones_bean {
             throw ex;
         }catch (Exception ex){responderException(ex);}
     }
-    private void responderException(Exception ex){
+    private static void responderException(Exception ex){
         System.out.println("error en validacion");
         ex.printStackTrace();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR

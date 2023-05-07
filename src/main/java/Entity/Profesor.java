@@ -130,7 +130,12 @@ public class Profesor implements Serializable {
 
     @Override
     public String toString() {
-        return "entidades.Profesor[ id=" + id + " ]";
+        return "Profesor{" +
+                "id=" + id +
+                ", especialidad='" + especialidad + '\'' +
+                ", facultad='" + facultad + '\'' +
+                ", carrera='" + carrera + '\'' +
+                ", iduniversitario=" + iduniversitario +
+                '}';
     }
-    
 }

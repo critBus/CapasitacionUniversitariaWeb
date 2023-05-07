@@ -60,6 +60,56 @@ public class ConexionBD {
         }
         return lr;
     }
+    public List<Profesor> obtenerListaDeProfesoresQueNoEstan(Capasitacion c)throws Exception{
+        List<Profesor> lpe=obtenerListaDeProfesores(c);
+        List<Profesor> lp=obtenerListaDeProfesores();
+
+        for (Profesor p_esta :
+                lpe) {
+            for (Profesor p:
+                    lp) {
+                if(p.getId().equals(p_esta.getId())){
+                    lp.remove(p);
+                    break;
+                }
+            }
+        }
+        return lp;
+    }
+    public List<Estudiante> obtenerListaDeEstudianteQueNoEstan(Capasitacion c)throws Exception{
+        List<Estudiante> lpe=obtenerListaDeEstudiante(c);
+        List<Estudiante> lp=obtenerListaDeEstudiantes();
+
+        for (Estudiante p_esta :
+                lpe) {
+            for (Estudiante p:
+                    lp) {
+                if(p.getId().equals(p_esta.getId())){
+                    lp.remove(p);
+                    break;
+                }
+            }
+        }
+        return lp;
+    }
+    public List<Profesor> obtenerListaDeProfesores(Capasitacion c)throws Exception{
+        List<Profesor> lp=new ArrayList<>();
+        List<CapasitacionProfesor> lcp=obtenerListaDeCapasitacionProfesor(c);
+        for (CapasitacionProfesor cp:
+             lcp){
+            lp.add(cp.getIdprofesor());
+        }
+        return lp;
+    }
+    public List<Estudiante> obtenerListaDeEstudiante(Capasitacion c)throws Exception{
+        List<Estudiante> lp=new ArrayList<>();
+        List<CapasitacionEstudiante> lcp=obtenerListaDeCapasitacionEstudiante(c);
+        for (CapasitacionEstudiante cp:
+                lcp){
+            lp.add(cp.getIdestudiante());
+        }
+        return lp;
+    }
     public List<Profesor> obtenerListaDeProfesores()throws Exception{
         return restProfesor.findAll();
     }
@@ -77,6 +127,39 @@ public class ConexionBD {
     }
     public Capasitacion obtenerCapasitacion(int id)throws Exception{
         return restCapasitacion.findById(id);
+    }
+
+    public CapasitacionProfesor obtenerCapasitacionProfesor(Capasitacion c,Profesor p)throws Exception{
+        List<CapasitacionProfesor> lc=obtenerListaDeCapasitacionProfesor(c);
+        for (CapasitacionProfesor cp :
+                lc) {
+            if (cp.getIdprofesor().getId().equals(p.getId())) {
+                return cp;
+            }
+        }
+        return null;
+    }
+    public CapasitacionEstudiante obtenerCapasitacionEstudiante(Capasitacion c,Estudiante p)throws Exception{
+        List<CapasitacionEstudiante> lc=obtenerListaDeCapasitacionEstudiante(c);
+        for (CapasitacionEstudiante cp :
+                lc) {
+            if (cp.getIdestudiante().getId().equals(p.getId())) {
+                return cp;
+            }
+        }
+        return null;
+    }
+    public CapasitacionProfesor obtenerCapasitacionProfesor(CapasitacionProfesor c)throws Exception{
+        return obtenerCapasitacionProfesor(c.getId());
+    }
+    public CapasitacionProfesor obtenerCapasitacionProfesor(int id)throws Exception{
+        return restCapasitacionProfesor.findById(id);
+    }
+    public CapasitacionEstudiante obtenerCapasitacionEstudiante(CapasitacionEstudiante c)throws Exception{
+        return obtenerCapasitacionEstudiante(c.getId());
+    }
+    public CapasitacionEstudiante obtenerCapasitacionEstudiante(int id)throws Exception{
+        return restCapasitacionEstudiante.findById(id);
     }
     public Capasitacion obtenerCapasitacion(Capasitacion c)throws Exception{
         return obtenerCapasitacion(c.getId());
@@ -288,9 +371,94 @@ public class ConexionBD {
         }
         return null;
     }
-    public Capasitacion editar_Capasitacion(Capasitacion e)throws Exception{
+    public Capasitacion editar_Capasitacion(
+            Capasitacion e
+            ,List<Profesor> profesores
+            ,List<Estudiante> estudiantes)throws Exception{
+
         if(restCapasitacion.update(e)){
-            return obtenerCapasitacion(e);
+            e=obtenerCapasitacion(e);
+            if(e!=null){
+                List<Profesor> lpe=obtenerListaDeProfesores(e);
+                List<Profesor> lpe_QueSiEstan=new ArrayList<>();
+                for (Profesor p_Anterior:
+                     lpe) {
+                    boolean estaProfesorActual=false;
+                    for (Profesor p_Actual:
+                            profesores) {
+                        if(p_Actual.getId().equals(p_Anterior.getId())){
+                            estaProfesorActual=true;
+                            break;
+                        }
+                    }
+                    if(!estaProfesorActual){
+                        CapasitacionProfesor cp=obtenerCapasitacionProfesor(e,p_Anterior);
+                        if(cp==null||!eliminar_CapasitacionProfesor(cp)){
+                            return null;
+                        }
+                    }else{
+                        lpe_QueSiEstan.add(p_Anterior);
+                    }
+                }
+                for (Profesor p_Actual :
+                        profesores) {
+                    boolean estaProfesorActual=false;
+                    for (Profesor p_Anterior:
+                            lpe_QueSiEstan){
+                        if(p_Actual.getId().equals(p_Anterior.getId())){
+                            estaProfesorActual=true;
+                            break;
+                        }
+                    }
+                    if(!estaProfesorActual){
+                        if(crearCapasitacionProfesor(e,p_Actual)==null){
+                            return null;
+                        }
+                    }
+                }
+
+
+                List<Estudiante> lpe2=obtenerListaDeEstudiante(e);
+                List<Estudiante> lpe2_QueSiEstan=new ArrayList<>();
+                for (Estudiante p_Anterior:
+                        lpe2) {
+                    boolean estaActual=false;
+                    for (Estudiante p_Actual:
+                            estudiantes) {
+                        if(p_Actual.getId().equals(p_Anterior.getId())){
+                            estaActual=true;
+                            break;
+                        }
+                    }
+                    if(!estaActual){
+                        CapasitacionEstudiante cp=obtenerCapasitacionEstudiante(e,p_Anterior);
+                        if(cp==null||!eliminar_CapasitacionEstudiante(cp)){
+                            return null;
+                        }
+                    }else{
+                        lpe2_QueSiEstan.add(p_Anterior);
+                    }
+                }
+                for (Estudiante p_Actual :
+                        estudiantes) {
+                    boolean estaActual=false;
+                    for (Estudiante p_Anterior:
+                            lpe2_QueSiEstan){
+                        if(p_Actual.getId().equals(p_Anterior.getId())){
+                            estaActual=true;
+                            break;
+                        }
+                    }
+                    if(!estaActual){
+                        if(crearCapasitacionEstudiante(e,p_Actual)==null){
+                            return null;
+                        }
+                    }
+                }
+
+
+                return e;
+            }
         }
         return null;
     }
@@ -457,6 +625,29 @@ public class ConexionBD {
         return mayor;
     }
 
+    public int obtenerUltimoID_CapasitacionProfesor()throws Exception{
+        int mayor=0;
+        List<CapasitacionProfesor> l=obtenerListaDeCapasitacionProfesor();
+        for (CapasitacionProfesor u:
+                l) {
+            if(u.getId()>mayor){
+                mayor=u.getId();
+            }
+        }
+        return mayor;
+    }
+    public int obtenerUltimoID_CapasitacionEstudiante()throws Exception{
+        int mayor=0;
+        List<CapasitacionEstudiante> l=obtenerListaDeCapasitacionEstudiante();
+        for (CapasitacionEstudiante u:
+                l) {
+            if(u.getId()>mayor){
+                mayor=u.getId();
+            }
+        }
+        return mayor;
+    }
+
     public boolean esEstudiante(Profesor p)throws Exception{
         return obtenerEstudiante(p)!=null;
     }
@@ -479,13 +670,40 @@ public class ConexionBD {
         return null;
 
     }
+    public CapasitacionProfesor crearCapasitacionProfesor(Capasitacion c,Profesor p)throws Exception{
+        CapasitacionProfesor cp=new CapasitacionProfesor();
+        int id=obtenerUltimoID_CapasitacionProfesor();
+        cp.setId(++id);
+        cp.setIdcapasitacion(c);
+        cp.setIdprofesor(p);
+        if(restCapasitacionProfesor.create(cp)){
+            cp=obtenerCapasitacionProfesor(id);
+            return cp;
+        }
+        return null;
+    }
+    public CapasitacionEstudiante crearCapasitacionEstudiante(Capasitacion c,Estudiante p)throws Exception{
+        CapasitacionEstudiante cp=new CapasitacionEstudiante();
+        int id=obtenerUltimoID_CapasitacionEstudiante();
+        cp.setId(++id);
+        cp.setIdcapasitacion(c);
+        cp.setIdestudiante(p);
+        if(restCapasitacionEstudiante.create(cp)){
+            cp=obtenerCapasitacionEstudiante(id);
+            return cp;
+        }
+        return null;
+    }
     public Capasitacion crearCapasitacion(String titulo,
                                            String tema,
                                            String edicion,
                                            String programa,
                                            Date fechaDeInicio,
                                            Date fechaDeFin,
-                                           TipoDeCapasitacion tipo)throws Exception{
+                                           TipoDeCapasitacion tipo
+                                          ,List<Profesor> profesores
+                                          ,List<Estudiante> estudiantes
+    )throws Exception{
         Capasitacion u=new Capasitacion();
         int id=obtenerUltimoID_Capasitacion();
         u.setId(++id);
@@ -498,8 +716,25 @@ public class ConexionBD {
         u.setTipo(tipo.toString());
         if(restCapasitacion.create(u)){
             u=obtenerCapasitacion(tipo,titulo);
-            return u;
+            if(u!=null){
+                for (Profesor p:
+                        profesores) {
+                    if(crearCapasitacionProfesor(u,p)==null){
+                        return null;
+                    }
+                }
+                for (Estudiante p:
+                        estudiantes) {
+                    if(crearCapasitacionEstudiante(u,p)==null){
+                        return null;
+                    }
+                }
+                return u;
+            }
+
+
         }
+
         return null;
 
     }

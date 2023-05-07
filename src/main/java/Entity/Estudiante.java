@@ -143,7 +143,13 @@ public class Estudiante implements Serializable {
 
     @Override
     public String toString() {
-        return "entidades.Estudiante[ id=" + id + " ]";
+        return "Estudiante{" +
+                "id=" + id +
+                ", facultad='" + facultad + '\'' +
+                ", carrera='" + carrera + '\'' +
+                ", curso=" + curso +
+                ", semestre=" + semestre +
+                ", iduniversitario=" + iduniversitario +
+                '}';
     }
-    
 }
