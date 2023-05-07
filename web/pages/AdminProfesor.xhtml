@@ -33,7 +33,7 @@
                         <p:commandButton styleClass="btn btn-primary mr-2" icon="mdi mdi-library-plus" value="Adicionar"
                                          process="@this" actionListener="#{adminProfesores_bean.clean_variables()}"
                                          oncomplete="PF('addDialog2').show()"
-                                         update="form:manage-user-content"
+                                         update="form2:manage-user-content2"
                                          style="margin-right: .5rem"/>
                         <br/>
                     </div>
@@ -41,13 +41,16 @@
                 <div class="row">
                     <div class="col col-md-12">
                     <p:dataTable tableStyleClass="table-striped" id="dt-entidad" var="entidad" value="#{adminProfesores_bean.lista_de_entidades}" reflow="true" styleClass="table"
-                                 paginator="true" rows="10" paginatorPosition="bottom">
+                                 paginator="true" rows="10" paginatorPosition="bottom"
+                                 sortBy="#{entidad.iduniversitario.nombre}"
+                    >
                         <f:facet name="header">
                             <div class="table-header">
                                 <span style="font-weight: bold">Profesores</span>
                             </div>
                         </f:facet>
-                        <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
+                        <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}"
+                                  sortBy="#{entidad.iduniversitario.nombre}">
                             <h:outputText value="#{entidad.iduniversitario.nombre}"/>
                         </p:column>
                         <p:column headerText="Facultad" filterBy="#{entidad.facultad}" sortBy="#{entidad.facultad}">
@@ -59,11 +62,11 @@
                             <h:outputText value="#{entidad.carrera}"/>
                         </p:column>
                         <p:column headerText="Estudiante"
-                                  filterBy="#{adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}"
-                                  sortBy="#{adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}">
+                                  filterBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"
+                                  sortBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}">
                             <h:outputText
-                                    style="color: #{adminProfesores_bean.getEstiloEnTablaEsEstudiante(entidad)};"
-                                    value="#{adminProfesores_bean.getTextoEnTablaEsEstudiante(entidad)}"/>
+                                    style="color: #{template_bean.getEstiloEnTablaEsEstudiante(entidad)};"
+                                    value="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"/>
                         </p:column>
                         <p:column headerText="Opciones" exportable="false">
                             <p:commandButton icon="ui-icon-info" update=":form:info-content"

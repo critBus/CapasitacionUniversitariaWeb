@@ -1,9 +1,11 @@
 package beans;
 
 import Entity.Authorities;
+import Entity.Profesor;
 import Entity.Users;
 import Rest.RestAuthorities;
 import Rest.RestUsers;
+import Utils.ConexionBD;
 import org.primefaces.PrimeFaces;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,7 @@ public class Template_bean {
     private Users user;
     private static final RestAuthorities restAuthorities= new RestAuthorities();
     private static final RestUsers restUsers = new RestUsers();
+    private static ConexionBD bd=new ConexionBD();
 
     /**
      *
@@ -93,6 +96,20 @@ public class Template_bean {
         if(translateRole_Boolean(r))
             return "";
         return "display: none;";
+    }
+    public boolean esProfesorEstudiante(Profesor p){
+        try{
+            return bd.esEstudiante(p);
+        }catch (Exception ex){
+            responderException(ex);
+            return false;
+        }
+    }
+    public String getTextoEnTablaEsEstudiante(Profesor p){
+        return esProfesorEstudiante(p)?"estudiante":"no";
+    }
+    public String getEstiloEnTablaEsEstudiante(Profesor p){
+        return esProfesorEstudiante(p)?"green":"red";
     }
 
 //    public String obtenerPatron_CaracteresAlfanumericos(){

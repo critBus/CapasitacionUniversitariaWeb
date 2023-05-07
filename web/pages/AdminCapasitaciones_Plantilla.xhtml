@@ -48,7 +48,9 @@
                 <div class="row">
                     <div class="col col-md-12">
                         <p:dataTable tableStyleClass="table-striped" id="dt-entidad" var="entidad" value="#{adminCapasitacion_bean.lista_de_entidades}" reflow="true" styleClass="table"
-                                     paginator="true" rows="10" paginatorPosition="bottom">
+                                     paginator="true" rows="10" paginatorPosition="bottom"
+                                     sortBy="#{entidad.titulo}"
+                        >
                             <f:facet name="header">
                                 <div class="table-header">
                                     <span style="font-weight: bold">#{adminCapasitacion_bean.tipo.texto.nombrePlural}</span>
@@ -377,7 +379,7 @@
                 </p:dialog>
                 <!--actionListener="# {adminCapasitacion.alApretarEnCancelarEditar()}"-->
                 <!--Info Estudiante Dialog-->
-                <p:dialog header="Informaci&oacute;n" width="450" showEffect="fade" modal="true"
+                <p:dialog header="Informaci&oacute;n" width="1000" height="450" showEffect="fade" modal="true"
                           widgetVar="infoDialog" id="infoDialog" responsive="true">
                     <p:outputPanel id="info-content" class="ui-fluid">
                         <p:outputPanel>
@@ -409,6 +411,71 @@
                             </div>
 
                         </p:outputPanel>
+                        <p:panel header="Profesores">
+                            <p:dataTable tableStyleClass="table-striped" id="dt-entidad-profesores"
+                                         var="entidad" value="#{adminCapasitacion_bean.lista_profesores}" reflow="true" styleClass="table"
+                                         paginator="true" rows="10" paginatorPosition="bottom"
+                                         sortBy="#{entidad.iduniversitario.nombre}"
+                            >
+                                <f:facet name="header">
+                                    <div class="table-header">
+                                        <span style="font-weight: bold">Profesores</span>
+                                    </div>
+                                </f:facet>
+                                <p:column headerText="Nombre"
+                                          filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
+                                    <h:outputText value="#{entidad.iduniversitario.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Facultad" filterBy="#{entidad.facultad}" sortBy="#{entidad.facultad}">
+                                    <h:outputText value="#{entidad.facultad}"/>
+                                </p:column>
+                                <p:column headerText="Carrera"
+                                          filterBy="#{entidad.carrera}"
+                                          sortBy="#{entidad.carrera}">
+                                    <h:outputText value="#{entidad.carrera}"/>
+                                </p:column>
+                                <p:column headerText="Estudiante"
+                                          filterBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"
+                                          sortBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}">
+                                    <h:outputText
+                                            style="color: #{template_bean.getEstiloEnTablaEsEstudiante(entidad)};"
+                                            value="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"/>
+                                </p:column>
+                                </p:dataTable>
+
+                        </p:panel>
+                        <p:panel header="Estudiantes">
+                            <p:dataTable tableStyleClass="table-striped" id="dt-entidad-estudiantes" var="entidad"
+                                         value="#{adminCapasitacion_bean.lista_estudiante}"
+                                         reflow="true" styleClass="table"
+                                         paginator="true" rows="10" paginatorPosition="bottom"
+                                         sortBy="#{entidad.iduniversitario.nombre}"
+                            >
+                                <f:facet name="header">
+                                    <div class="table-header">
+                                        <span style="font-weight: bold">Estudiantes</span>
+                                    </div>
+                                </f:facet>
+                                <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
+                                    <h:outputText value="#{entidad.iduniversitario.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Facultad" filterBy="#{entidad.facultad}"
+                                          sortBy="#{entidad.facultad}">
+                                    <h:outputText value="#{entidad.facultad}"/>
+                                </p:column>
+                                <p:column headerText="Carrera" filterBy="#{entidad.carrera}"
+                                          sortBy="#{entidad.carrera}">
+                                    <h:outputText value="#{entidad.carrera}"/>
+                                </p:column>
+                                <p:column headerText="Curso" filterBy="#{entidad.curso}" sortBy="#{entidad.curso}">
+                                    <h:outputText value="#{entidad.curso}"/>
+                                </p:column>
+                                <p:column headerText="Semestre" filterBy="#{entidad.semestre}" sortBy="#{entidad.semestre}">
+                                    <h:outputText value="#{entidad.semestre}"/>
+                                </p:column>
+                            </p:dataTable>
+
+                        </p:panel>
                     </p:outputPanel>
                     <f:facet name="footer">
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoDialog').hide()"

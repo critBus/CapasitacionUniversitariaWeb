@@ -43,6 +43,9 @@ public class AdminCapasitacion_bean {
     private DualListModel<Estudiante> dualListModel_estudiantes=new DualListModel<Estudiante>(new ArrayList<Estudiante>(),new ArrayList<Estudiante>());
     private DualListModel<Profesor> dualListModel_profesores=new DualListModel<Profesor>(new ArrayList<Profesor>(),new ArrayList<Profesor>());
 
+    private List<Estudiante> lista_estudiante=new ArrayList<>();
+    private List<Profesor> lista_profesores=new ArrayList<>();
+
     private static ConexionBD bd=new ConexionBD();
     public void init(){
         try{
@@ -237,14 +240,17 @@ try{
         try{
             if(e!=null){
                 entidad=bd.copiarCapasitacion(e);
+                lista_estudiante=bd.obtenerListaDeEstudiante(entidad);
+                lista_profesores=bd.obtenerListaDeProfesores(entidad);
                 dualListModel_profesores=new DualListModel<Profesor>(
                         bd.obtenerListaDeProfesoresQueNoEstan(entidad)
-                        ,bd.obtenerListaDeProfesores(entidad)
+                        ,lista_profesores
                 );
                 dualListModel_estudiantes=new DualListModel<Estudiante>(
                         bd.obtenerListaDeEstudianteQueNoEstan(entidad)
-                        ,bd.obtenerListaDeEstudiante(entidad)
+                        ,lista_estudiante
                 );
+
             }
         }catch (Exception ex){
             responderException(ex);
@@ -423,5 +429,21 @@ try{
 
     public void setDualListModel_profesores(DualListModel<Profesor> dualListModel_profesores) {
         this.dualListModel_profesores = dualListModel_profesores;
+    }
+
+    public List<Estudiante> getLista_estudiante() {
+        return lista_estudiante;
+    }
+
+    public void setLista_estudiante(List<Estudiante> lista_estudiante) {
+        this.lista_estudiante = lista_estudiante;
+    }
+
+    public List<Profesor> getLista_profesores() {
+        return lista_profesores;
+    }
+
+    public void setLista_profesores(List<Profesor> lista_profesores) {
+        this.lista_profesores = lista_profesores;
     }
 }

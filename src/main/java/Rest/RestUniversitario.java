@@ -125,4 +125,35 @@ public class RestUniversitario {
 		}
 		return false;
 	}
+	public Universitario createAndGet(Universitario universitario)throws Exception{
+		String inputJson = null;
+		inputJson = JSONUtils.covertFromObjectToJson(universitario);
+		HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
+		CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
+		universitario=null;
+		try {
+			//pq por encima de este numero es una peticion incorrecta
+			if(response.get().statusCode() > 299){
+				response.join();
+				return null;
+			}else {
+				try {
+					universitario = JSONUtils.covertFromJsonToObject(response.get().body(), Universitario.class);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				response.join();
+				return universitario;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return universitario;
+	}
 }

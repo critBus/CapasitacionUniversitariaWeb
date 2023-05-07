@@ -128,7 +128,7 @@ public class AdminProfesores_bean {
             if(e!=null){
 
                 entidad=bd.copiarProfesor(e);
-                esEstudiante=esProfesorEstudiante(e);
+                esEstudiante=bd.esEstudiante(e);
                 if(esEstudiante){
                     Estudiante es=bd.obtenerEstudiante(e);
                     curso=es.getCurso();
@@ -148,20 +148,6 @@ public class AdminProfesores_bean {
     }
     public String estiloSiEsEstudiante(){
         return verSiEsEstudiante()?"":"display: none;";
-    }
-    public boolean esProfesorEstudiante(Profesor p){
-        try{
-            return bd.esEstudiante(p);
-        }catch (Exception ex){
-            responderException(ex);
-            return false;
-        }
-    }
-    public String getTextoEnTablaEsEstudiante(Profesor p){
-        return esProfesorEstudiante(p)?"estudiante":"no";
-    }
-    public String getEstiloEnTablaEsEstudiante(Profesor p){
-        return esProfesorEstudiante(p)?"green":"red";
     }
     public String obtenerEstiloEnInfoEsEstudiante(){
         return esEstudiante?"green":"red";

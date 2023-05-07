@@ -306,8 +306,9 @@ public class ConexionBD {
         e.setSemestre(semestre);
         e.setFacultad(facultad);
         e.setIduniversitario(u);
-        if(restEstudiante.create(e)){
-            e=obtenerEstudiante(u.getNombre());
+        e=restEstudiante.createAndGet(e);
+        if(e!=null){
+            //e=obtenerEstudiante(u.getNombre());
             return e;
         }
         return null;
@@ -338,8 +339,9 @@ public class ConexionBD {
             e.setCarrera(carrera);
             e.setFacultad(facultad);
             e.setIduniversitario(u);
-            if(restProfesor.create(e)){
-                e=obtenerProfesor(nombre);
+            e=restProfesor.createAndGet(e);
+            if(e!=null){
+                //e=obtenerProfesor(nombre);
                 return e;
             }
         }
@@ -676,8 +678,10 @@ public class ConexionBD {
         cp.setId(++id);
         cp.setIdcapasitacion(c);
         cp.setIdprofesor(p);
-        if(restCapasitacionProfesor.create(cp)){
-            cp=obtenerCapasitacionProfesor(id);
+
+        cp=restCapasitacionProfesor.createAndGet(cp);
+        if(cp!=null){
+            //cp=obtenerCapasitacionProfesor(id);
             return cp;
         }
         return null;
@@ -688,8 +692,9 @@ public class ConexionBD {
         cp.setId(++id);
         cp.setIdcapasitacion(c);
         cp.setIdestudiante(p);
-        if(restCapasitacionEstudiante.create(cp)){
-            cp=obtenerCapasitacionEstudiante(id);
+        cp=restCapasitacionEstudiante.createAndGet(cp);
+        if(cp!=null){
+            //cp=obtenerCapasitacionEstudiante(id);
             return cp;
         }
         return null;
@@ -714,7 +719,10 @@ public class ConexionBD {
         u.setTema(tema);
         u.setTitulo(titulo);
         u.setTipo(tipo.toString());
-        if(restCapasitacion.create(u)){
+
+        u=restCapasitacion.createAndGet(u);
+        id=u.getId();
+        if(u!=null){
             u=obtenerCapasitacion(tipo,titulo);
             if(u!=null){
                 for (Profesor p:

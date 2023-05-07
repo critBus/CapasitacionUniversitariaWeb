@@ -39,13 +39,16 @@
                 <div class="row">
                     <div class="col col-md-12">
                     <p:dataTable tableStyleClass="table-striped" id="dt-user" var="entidad" value="#{adminUsers_bean.list_users}" reflow="true" styleClass="table"
-                                 paginator="true" rows="10" paginatorPosition="bottom">
+                                 paginator="true" rows="10" paginatorPosition="bottom"
+                                 sortBy="#{entidad.username}"
+                    >
                         <f:facet name="header">
                             <div class="table-header">
                                 <span style="font-weight: bold">Usuarios</span>
                             </div>
                         </f:facet>
-                        <p:column headerText="Nombre de usuario" filterBy="#{entidad.username}" sortBy="#{entidad.username}">
+                        <p:column headerText="Nombre de usuario" filterBy="#{entidad.username}"
+                                  sortBy="#{entidad.username}">
                             <h:outputText value="#{entidad.username}"/>
                         </p:column>
                         <p:column headerText="Identificaci&oacute;n" filterBy="#{entidad.identificacion}" sortBy="#{entidad.identificacion}">
