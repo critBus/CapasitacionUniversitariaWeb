@@ -16,41 +16,191 @@
 >
 
 <h:head>
+    <h:outputStylesheet library="css" name="materialdesignicons.min.css"/>
+    <h:outputStylesheet library="css" name="/loguin/feather.css"/>
+    <h:outputStylesheet library="css" name="/loguin/vendor.bundle.base.css"/>
+    <h:outputStylesheet library="css" name="/loguin/style.css"/>
+    <h:outputStylesheet library="css" name="google_fonts.css"/>
     <title>Login</title>
 </h:head>
 
 <h:body>
-    <!-- # {adminUsers_bean.agregarSiNoHayNinguno()} -->
-    <form action="/login" method="post"> ❶
-        <c:if test="${param.error != null}"> ❷
-            <p>
-                Invalid username and password.
-            </p>
-        </c:if>
-        <c:if test="${param.logout != null}"> ❸
-            <p>
-                You have been logged out.
-            </p>
-        </c:if>
-        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
-            <div class="alert-danger">
-                <button class="close-link" data-dismiss="alert"><span>&times;</span></button>
-                <strong>Warning!</strong> ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+    <style>
+        .auth .login-half-bg {
+            background: url(/resources/images/loguin/register-bg_2.jpg) !important;
+            background-size: cover;
+        }
+    </style>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <div class="content-wrapper d-flex align-items-stretch auth auth-img-bg">
+                <div class="row flex-grow">
+                    <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                        <div class="auth-form-transparent text-left p-3">
+                            <div class="brand-logo d-flex justify-content-center">
+<!--                                <img src="/resources/images/logos/logo-negro.png" alt="logo"/>-->
+                                <h1 class=" gf_BungeeSpice-Regular"
+                                    style="font-size: xxx-large; margin-bottom: 0px;"
+                                >CEGED</h1>
+                            </div>
+                            <div class="container text-center">
+                                <div class="row mt-2">
+                                    <div class="col gf_roboto_black">
+                                        <h4>Bienvenido!</h4>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col ">
+                                        <h6 class="font-weight-light">Introduzca su usuario y contrase&ntilde;a para continuar </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+<!--                            <form action="/login" method="post"> ❶-->
+
+<!--                                <p>-->
+<!--                                    <label for="username">Username</label>-->
+<!--                                    <input type="text" id="username" name="username"/> ❹-->
+<!--                                </p>-->
+<!--                                <p>-->
+<!--                                    <label for="password">Password</label>-->
+<!--                                    <input type="password" id="password" name="password"/> ❺-->
+<!--                                </p>-->
+
+<!--                                <button type="submit" class="btn">Log in</button>-->
+<!--                            </form>-->
+
+
+
+
+                            <form class="pt-3"
+                                  action="/login" method="post"
+                            >
+                                <input type="hidden"
+                                       name="${_csrf.parameterName}"
+                                       value="${_csrf.token}"/>
+
+                                <c:if test="${param.error != null}">
+                                    <div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <strong class="alert-heading" >Advertencia!</strong>
+                                        <p>
+                                            Usuario o contrase&ntilde;a inv&aacute;lidos.
+                                        </p>
+                                    </div>
+
+                                </c:if>
+                                <c:if test="${param.logout != null}">
+                                    <div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <strong class="alert-heading" >Advertencia!</strong>
+                                        <p>
+                                            Has cerrado sesi&oacute;n.
+                                        </p>
+                                    </div>
+
+                                </c:if>
+                                <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
+                                    <div class="alert alert-danger alert-dismissible fade show">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <strong class="alert-heading" >Advertencia!</strong>
+                                        <p>
+                                            ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+                                        </p>
+
+                                    </div>
+                                </c:if>
+
+                                <div class="form-group">
+
+                                    <label for="exampleInputEmail"><strong>Usuario</strong></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend bg-transparent">
+                      <span class="input-group-text bg-transparent border-right-0">
+                        <i class="mdi mdi-account-outline text-primary"></i>
+                      </span>
+                                        </div>
+                                        <input name="username"
+                                                type="text"
+                                               class="form-control form-control-lg border-left-0"
+                                               id="exampleInputEmail"
+                                               placeholder="Usuario"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword"><strong>Contrase&ntilde;a</strong></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend bg-transparent">
+                      <span class="input-group-text bg-transparent border-right-0">
+                        <i class="mdi mdi-lock-outline text-primary"></i>
+                      </span>
+                                        </div>
+                                        <input name="password"
+                                                type="password"
+                                               class="form-control form-control-lg border-left-0"
+                                               id="exampleInputPassword" placeholder="Contrase&ntilde;a"/>
+                                    </div>
+                                </div>
+
+<!--                                <div class="my-2 d-flex justify-content-between align-items-center">-->
+<!--                                    <div class="form-check">-->
+<!--                                        <label class="form-check-label text-muted">-->
+<!--                                            <input type="checkbox" class="form-check-input"/>-->
+<!--                                            Keep me signed in-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                    <a href="#" class="auth-link text-black">Forgot password?</a>-->
+<!--                                </div>-->
+
+                                <div class="my-3">
+                                    <button type="submit"
+                                            class="btn btn-block btn-info btn-lg font-weight-medium auth-form-btn"
+                                    >Iniciar Sesión</button>
+<!--                                    <a class="btn btn-block btn-info btn-lg font-weight-medium auth-form-btn" -->
+<!--                                       href="../../index.html">LOGIN</a>-->
+                                </div>
+<!--                                <div class="mb-2 d-flex">-->
+<!--                                    <button type="button" class="btn btn-facebook auth-form-btn flex-grow mr-1">-->
+<!--                                        <i class="mdi mdi-facebook mr-2"></i>-->
+<!--                                        Facebook-->
+<!--                                    </button>-->
+<!--                                    <button type="button" class="btn btn-google auth-form-btn flex-grow ml-1">-->
+<!--                                        <i class="mdi mdi-google mr-2"></i>-->
+<!--                                        Google-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                                <div class="text-center mt-4 font-weight-light">-->
+<!--                                    Don't have an account? <a href="register-2.html" class="text-primary">Create</a>-->
+<!--                                </div>-->
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 login-half-bg d-flex flex-row">
+<!--                        <p class="text-white font-weight-medium text-center flex-grow align-self-end">Copyright &copy; 2020  All rights reserved.</p>-->
+                    </div>
+                </div>
             </div>
-        </c:if>
-        <p>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username"/> ❹
-        </p>
-        <p>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password"/> ❺
-        </p>
-        <input type="hidden"
-               name="${_csrf.parameterName}"
-               value="${_csrf.token}"/>
-        <button type="submit" class="btn">Log in</button>
-    </form>
+            <!-- content-wrapper ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+
+
+
+    <h:outputScript library="js" name="/loguin/vendor.bundle.base.js"/>
+    <h:outputScript library="js" name="/loguin/off-canvas.js"/>
+    <h:outputScript library="js" name="/loguin/hoverable-collapse.js"/>
+    <h:outputScript library="js" name="/loguin/template.js"/>
     
 </h:body>
 

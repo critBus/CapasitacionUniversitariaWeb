@@ -17,11 +17,14 @@
 
 <h:head>
     <!--CSS-->
+
     <h:outputStylesheet library="css" name="materialdesignicons.min.css"/>
     <h:outputStylesheet library="css" name="vendor.bundle.base.css"/>
     <h:outputStylesheet library="css" name="style.css"/>
     <h:outputStylesheet library="css" name="bootstrap.min.css"/>
     <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+
+    <h:outputStylesheet library="css" name="google_fonts.css"/>
 <!--    <h:outputStylesheet library="css" name="estilos_normales.css"/>-->
 
 <!--    <h:outputStylesheet library="css" name="# {template_bean.themeName}.css" />-->
@@ -42,10 +45,15 @@
         <nav class="navbar col-lg-12 col-12 p-0 d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex justify-content-center">
                 <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-                    <a class="navbar-brand brand-logo" href="../../index.html"><img src="/resources/images/logos/logo-negro.png" alt="logo"/>
+
+                    <div class="navbar-brand brand-logo" style="width: 100%;    text-align: center;" >
+                        <h1 class=" gf_BungeeSpice-Regular"
+                            style="font-size: xx-large; margin-bottom: 0px;"
+                        >CEGED</h1>
+<!--                        <img src="/resources/images/logos/logo-negro.png" alt="logo"/>-->
 <!--                    <strong>Admin</strong>-->
-                    </a>
-                    <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="/resources/images/logo-mini.svg" alt="logo"/></a>
+                    </div>
+<!--                    <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="/resources/images/logo-mini.svg" alt="logo"/></a>-->
                     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                         <span class="mdi mdi-sort-variant"></span>
                     </button>
@@ -70,7 +78,9 @@
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                             <img src="/resources/images/users/u10u.png" alt="profile"/>
-                            <span class="nav-profile-name">#{template_bean.currentUser()}</span>
+                            <span class="nav-profile-name gf_ArefRuqaaInk-Bold"
+                                  style="font-size: x-large"
+                            >#{template_bean.currentUser()}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
 <!--                            <a class="dropdown-item">-->
@@ -79,9 +89,11 @@
 <!--                            </a>-->
                             <form action="/logout"
                                   method="post">
-                                <button class="dropdown-item" type="submit"
+                                <button class="dropdown-item gf_ArefRuqaaInk-Bold" type="submit"
                                         >
-                                    <i class="mdi mdi-settings text-primary"></i>
+                                    <i class="mdi mdi-logout  text-primary"
+                                       style="font-size: x-large"
+                                    ></i>
                                     Log out
                                 </button>
                                 <input type="hidden"
@@ -107,59 +119,68 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar"
                  style="margin-right: 15px; "
             >
-                <ul class="nav">
+                <ul class="nav ">
+                    <li class="nav-item" >
+                        <p:link styleClass="nav-link"
+                                href="/index.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold" >Principal</span>
+                        </p:link>
+                    </li>
                     <li class="nav-item" >
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminUsers.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_admin)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title" >Administrar Usuarios</span>
+                            <i class="mdi mdi-account-multiple menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold" >Administrar Usuarios</span>
                         </p:link>
                     </li>
                     <li class="nav-item">
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminEstudiantes.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Administrar Estudiantes</span>
+                            <i class="mdi mdi-android-studio menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold">Administrar Estudiantes</span>
                         </p:link>
                     </li>
                     <li class="nav-item">
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminProfesor.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Administrar Profesores</span>
+                            <i class="mdi mdi-account-card-details menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold">Administrar Profesores</span>
                         </p:link>
                     </li>
                     <li class="nav-item">
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminCapasitaciones_Conferencia.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Administrar Conferencias</span>
+                            <i class="mdi mdi-airplay menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold">Administrar Conferencias</span>
                         </p:link>
                     </li>
                     <li class="nav-item">
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminCapasitaciones_Curso.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Administrar Cursos</span>
+                            <i class="mdi mdi-calendar-text menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold">Administrar Cursos</span>
                         </p:link>
                     </li>
                     <li class="nav-item">
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminCapasitaciones_Seminario.faces" rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Administrar Seminarios</span>
+                            <i class="mdi mdi-alphabetical menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold">Administrar Seminarios</span>
                         </p:link>
                     </li>
                     <li class="nav-item">
                         <p:link styleClass="nav-link"
                                 href="/pages/AdminCapasitaciones_Taller.faces"
                                 rendered="#{template_bean.translateRole_Boolean(template_bean.role_user)}">
-                            <i class="mdi mdi-view-headline menu-icon"></i>
-                            <span class="menu-title">Administrar Talleres</span>
+                            <i class="mdi mdi-apple-finder menu-icon"></i>
+                            <span class="menu-title gf_ArefRuqaaInk-Bold">Administrar Talleres</span>
                         </p:link>
                     </li>
 
                 </ul>
+
+<!--                <canvas id="total-sales-chart"></canvas>-->
             </nav>
             <!-- partial -->
             <div class="main-panel mt-2 rounded" style="background: #f3f3f3;">
@@ -193,6 +214,9 @@
     <h:outputScript library="js" name="template.js"/>
     <h:outputScript library="js" name="bootstrap.bundle.min.js"/>
     <h:outputScript library="js" name="PrimefacesLocale.js"/>
+
+<!--    <h:outputScript library="js" name="/extra/Chart.min.js"/>-->
+<!--    <h:outputScript library="js" name="/extra/paraTemplate.js"/>-->
 
 <!--    <script src="/resources/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>-->
 </h:body>
