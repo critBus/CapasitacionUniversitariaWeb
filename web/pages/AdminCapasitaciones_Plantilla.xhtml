@@ -181,7 +181,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-3 d-flex flex-row-reverse">
                                             <p:outputLabel for="idFechaDeInicio" >Fecha de inicio: </p:outputLabel>
 
                                         </div>
@@ -198,7 +198,7 @@
 
                                             />
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3 d-flex flex-row-reverse">
                                             <p:outputLabel for="idFechaDeFin">Fecha de Fin: </p:outputLabel>
 
                                         </div>
@@ -318,7 +318,7 @@
 
                         </p:outputPanel>
                         <f:facet name="footer">
-                            <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>
+<!--                            <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>-->
                             <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{adminCapasitacion_bean.create()}"
                                              update="manage-user-content,form:messages" process="manage-user-content @this"/>
                             <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('addDialog').hide()"
@@ -331,130 +331,187 @@
                     <p:dialog header="Editar" height="450" width="1000" showEffect="fade" modal="true"
                               widgetVar="editDialog" id="editDialog" responsive="true">
                         <p:outputPanel id="edit-content" class="ui-fluid">
-                            <p:outputPanel>
-                                <div class="p-field">
-                                    <p:outputLabel for="idTituloEditar">Titulo: </p:outputLabel>
-                                    <p:inputText id="idTituloEditar" value="#{adminCapasitacion_bean.entidad.titulo}"
-                                                 required="true"
-                                                 validator="#{validaciones_bean.validarConLetras}"
-                                                 mensajeParaValidacion="Introduzca un titulo correcto"
-                                                 requiredMessage="El titulo no puede estar vacío "
-                                    >
+                            <p:tabView>
+                                <p:tab title="Datos Generales">
+                                    <div class="row mb-2">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <p:outputLabel for="idTituloEditar">Titulo: </p:outputLabel>
 
-                                    </p:inputText>
+                                        </div>
+                                        <div class="col-10">
+                                            <p:inputText id="idTituloEditar" value="#{adminCapasitacion_bean.entidad.titulo}"
+                                                         required="true"
+                                                         validator="#{validaciones_bean.validarConLetras}"
+                                                         mensajeParaValidacion="Introduzca un titulo correcto"
+                                                         requiredMessage="El titulo no puede estar vacío "
+                                            >
+
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <p:outputLabel for="idTemaEditar">Tema: </p:outputLabel>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <p:inputText id="idTemaEditar" value="#{adminCapasitacion_bean.entidad.tema}"
+                                                         required="true"
+                                                         mensajeParaValidacion="Introduzca un tema correcto"
+                                                         validator="#{validaciones_bean.validarConLetras}"
+                                                         requiredMessage="El tema no puede estar vacío "
+                                            >
+
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <p:outputLabel for="idEdicionEditar">Edici&oacute;n: </p:outputLabel>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <p:inputText id="idEdicionEditar" value="#{adminCapasitacion_bean.entidad.edicion}"
+                                                         required="true"
+                                                         mensajeParaValidacion="Introduzca un nombre de edicion correcto"
+                                                         validator="#{validaciones_bean.validarConLetras}"
+                                                         requiredMessage="El nombre de la edicion no puede estar vacío "
+                                            >
+
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <p:outputLabel for="idProgramaEditar">Programa: </p:outputLabel>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <p:inputText id="idProgramaEditar" value="#{adminCapasitacion_bean.entidad.programa}"
+                                                         required="true"
+                                                         mensajeParaValidacion="Introduzca un nombre de programa correcto"
+                                                         validator="#{validaciones_bean.validarConLetras}"
+                                                         requiredMessage="El nombre del programa no puede estar vacío "
+                                            >
+
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3 d-flex flex-row-reverse">
+                                            <p:outputLabel for="idFechaDeInicioEditar">Fecha de inicio: </p:outputLabel>
+
+                                        </div>
+                                        <div class="col-3">
+                                            <p:datePicker id="idFechaDeInicioEditar"
+                                                          value="#{adminCapasitacion_bean.entidad.fechaInicio}"
+                                                          showTime="true"
+                                                          required="true"
+                                                          requiredMessage="La fecha de incio es incorrecta"
+                                                          converterMessage="La fecha de incio es incorrecta"
+                                                          validatorMessage="Introdusca una fecha de inicio valida"
+
+                                            />
+                                        </div>
+                                        <div class="col-3 d-flex flex-row-reverse">
+                                            <p:outputLabel for="idFechaDeFinEditar">Fecha de Fin: </p:outputLabel>
+
+                                        </div>
+                                        <div class="col-3">
+                                            <p:datePicker id="idFechaDeFinEditar"
+                                                          value="#{adminCapasitacion_bean.entidad.fechaFin}"
+                                                          showTime="true"
+                                                          required="true"
+                                                          requiredMessage="La fecha de fin es incorrecta"
+                                                          converterMessage="La fecha de fin es incorrecta"
+                                                          validatorMessage="Introdusca una fecha de fin valida"
+
+                                            />
+                                        </div>
+                                    </div>
+                                </p:tab>
+                                <p:tab title="Profesores">
+                                    <p:pickList id="PojoPickListEditar" value="#{adminCapasitacion_bean.dualListModel_estudiantes}"
+                                                var="entidad" effect="bounce"
+                                                itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
+                                                showSourceControls="true" showTargetControls="true" showCheckbox="true"
+                                                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+                                                converter="estudianteConverter"
+                                                responsive="true">
+                                        <!--                                -->
+                                        <f:facet name="sourceCaption">Disponibles</f:facet>
+                                        <f:facet name="targetCaption">Selecciondos</f:facet>
+
+                                        <p:column style="width:60%">
+                                            <h:outputText value="#{entidad.iduniversitario.nombre}" />
+                                        </p:column>
+
+                                        <p:column style="width:40%;">
+                                            <h:outputText value="#{entidad.carrera}" />
+                                        </p:column>
+                                    </p:pickList>
+
+                                </p:tab>
+                                <p:tab title="Estudiantes">
+                                    <p:pickList id="PojoPickList2Editar" value="#{adminCapasitacion_bean.dualListModel_profesores}"
+                                                var="entidad" effect="bounce"
+                                                itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
+                                                showSourceControls="true" showTargetControls="true" showCheckbox="true"
+                                                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+                                                converter="profesorConverter"
+                                                responsive="true">
+                                        <!--                                -->
+                                        <f:facet name="sourceCaption">Disponibles</f:facet>
+                                        <f:facet name="targetCaption">Selecciondos</f:facet>
+
+
+                                        <p:column style="width:60%">
+                                            <h:outputText value="#{entidad.iduniversitario.nombre}" />
+                                        </p:column>
+
+                                        <p:column style="width:40%;">
+                                            <h:outputText value="#{entidad.especialidad}" />
+                                        </p:column>
+                                    </p:pickList>
+
+                                </p:tab>
+                            </p:tabView>
+<!--                            <p:outputPanel>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
 
 
 
-                                </div>
-                                <div class="p-field">
-                                    <p:outputLabel for="idTemaEditar">Tema: </p:outputLabel>
-                                    <p:inputText id="idTemaEditar" value="#{adminCapasitacion_bean.entidad.tema}"
-                                                 required="true"
-                                                 mensajeParaValidacion="Introduzca un tema correcto"
-                                                 validator="#{validaciones_bean.validarConLetras}"
-                                                 requiredMessage="El tema no puede estar vacío "
-                                    >
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
 
-                                    </p:inputText>
-                                </div>
-                                <div class="p-field">
-                                    <p:outputLabel for="idEdicionEditar">Edici&oacute;n: </p:outputLabel>
-                                    <p:inputText id="idEdicionEditar" value="#{adminCapasitacion_bean.entidad.edicion}"
-                                                 required="true"
-                                                 mensajeParaValidacion="Introduzca un nombre de edicion correcto"
-                                                 validator="#{validaciones_bean.validarConLetras}"
-                                                 requiredMessage="El nombre de la edicion no puede estar vacío "
-                                    >
+<!--                            </p:outputPanel>-->
+<!--                            <p:panel id="idSeleccionEstudiantesEditar" header="Estudiantes" >-->
+<!--                                -->
+<!--                            </p:panel>-->
 
-                                    </p:inputText>
-                                </div>
-                                <div class="p-field">
-                                    <p:outputLabel for="idProgramaEditar">Programa: </p:outputLabel>
-                                    <p:inputText id="idProgramaEditar" value="#{adminCapasitacion_bean.entidad.programa}"
-                                                 required="true"
-                                                 mensajeParaValidacion="Introduzca un nombre de programa correcto"
-                                                 validator="#{validaciones_bean.validarConLetras}"
-                                                 requiredMessage="El nombre del programa no puede estar vacío "
-                                    >
-
-                                    </p:inputText>
-                                </div>
-                                <div class="p-field">
-                                    <p:outputLabel for="idFechaDeInicioEditar">Fecha de inicio: </p:outputLabel>
-                                    <p:datePicker id="idFechaDeInicioEditar"
-                                                  value="#{adminCapasitacion_bean.entidad.fechaInicio}"
-                                                  showTime="true"
-                                                  required="true"
-                                                  requiredMessage="La fecha de incio es incorrecta"
-                                                  converterMessage="La fecha de incio es incorrecta"
-                                                  validatorMessage="Introdusca una fecha de inicio valida"
-
-                                    />
-                                </div>
-                                <div class="p-field">
-                                    <p:outputLabel for="idFechaDeFinEditar">Fecha de Fin: </p:outputLabel>
-                                    <p:datePicker id="idFechaDeFinEditar"
-                                                  value="#{adminCapasitacion_bean.entidad.fechaFin}"
-                                                  showTime="true"
-                                                  required="true"
-                                                  requiredMessage="La fecha de fin es incorrecta"
-                                                  converterMessage="La fecha de fin es incorrecta"
-                                                  validatorMessage="Introdusca una fecha de fin valida"
-
-                                    />
-                                </div>
-
-                            </p:outputPanel>
-                            <p:panel id="idSeleccionEstudiantesEditar" header="Estudiantes" >
-                                <p:pickList id="PojoPickListEditar" value="#{adminCapasitacion_bean.dualListModel_estudiantes}"
-                                            var="entidad" effect="bounce"
-                                            itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
-                                            showSourceControls="true" showTargetControls="true" showCheckbox="true"
-                                            showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
-                                            converter="estudianteConverter"
-                                            responsive="true">
-                                    <!--                                -->
-                                    <f:facet name="sourceCaption">Disponibles</f:facet>
-                                    <f:facet name="targetCaption">Selecciondos</f:facet>
-
-                                    <p:column style="width:60%">
-                                        <h:outputText value="#{entidad.iduniversitario.nombre}" />
-                                    </p:column>
-
-                                    <p:column style="width:40%;">
-                                        <h:outputText value="#{entidad.carrera}" />
-                                    </p:column>
-                                </p:pickList>
-
-                            </p:panel>
-
-                            <p:panel id="idSeleccionProfesorEditar" header="Profesores" >
-                                <p:pickList id="PojoPickList2Editar" value="#{adminCapasitacion_bean.dualListModel_profesores}"
-                                            var="entidad" effect="bounce"
-                                            itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
-                                            showSourceControls="true" showTargetControls="true" showCheckbox="true"
-                                            showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
-                                            converter="profesorConverter"
-                                            responsive="true">
-                                    <!--                                -->
-                                    <f:facet name="sourceCaption">Disponibles</f:facet>
-                                    <f:facet name="targetCaption">Selecciondos</f:facet>
-
-
-                                    <p:column style="width:60%">
-                                        <h:outputText value="#{entidad.iduniversitario.nombre}" />
-                                    </p:column>
-
-                                    <p:column style="width:40%;">
-                                        <h:outputText value="#{entidad.especialidad}" />
-                                    </p:column>
-                                </p:pickList>
-
-                            </p:panel>
+<!--                            <p:panel id="idSeleccionProfesorEditar" header="Profesores" >-->
+<!--                                -->
+<!--                            </p:panel>-->
 
                         </p:outputPanel>
                         <f:facet name="footer">
-                            <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>
+<!--                            <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>-->
                             <!--                <p:outputLabel style="color: red"  value="* Campos de llenado obligatorio"/> <br></br>-->
                             <p:commandButton value="Guardar" icon="pi pi-check"
                                              actionListener="#{adminCapasitacion_bean.edit()}"
@@ -470,100 +527,158 @@
                     <p:dialog header="Informaci&oacute;n" width="1000" height="450" showEffect="fade" modal="true"
                               widgetVar="infoDialog" id="infoDialog" responsive="true">
                         <p:outputPanel id="info-content" class="ui-fluid">
-                            <p:outputPanel>
-                                <div class="p-field">
-                                    <strong>Titulo: </strong>
-                                    <p:outputLabel>#{adminCapasitacion_bean.entidad.titulo}</p:outputLabel>
-                                </div>
-                                <div class="p-field">
-                                    <strong>Tema</strong>
-                                    <p:outputLabel>#{adminCapasitacion_bean.entidad.tema}</p:outputLabel>
-                                </div>
-                                <div class="p-field">
-                                    <strong>Edici&oacute;: </strong>
-                                    <p:outputLabel>#{adminCapasitacion_bean.entidad.edicion}</p:outputLabel>
-                                </div>
-                                <div class="p-field">
-                                    <strong>Programa: </strong>
-                                    <p:outputLabel>#{adminCapasitacion_bean.entidad.programa}</p:outputLabel>
-                                </div>
-                                <div class="p-field">
-                                    <strong>Fecha de Inicio: </strong>
-                                    <h:outputText value="#{adminCapasitacion_bean.entidad.fechaInicio}"><f:convertDateTime pattern="dd/MM/yyyy hh:mm a" /></h:outputText>
+                            <p:tabView>
+                                <p:tab title="Datos Generales">
+                                    <div class="row">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <strong>Titulo: </strong>
 
-                                </div>
-                                <div class="p-field">
-                                    <strong>Fecha de Fin: </strong>
-                                    <h:outputText value="#{adminCapasitacion_bean.entidad.fechaFin}"><f:convertDateTime pattern="dd/MM/yyyy hh:mm a" /></h:outputText>
-
-                                </div>
-
-                            </p:outputPanel>
-                            <p:panel header="Profesores">
-                                <p:dataTable tableStyleClass="table-striped" id="dt-entidad-profesores"
-                                             var="entidad" value="#{adminCapasitacion_bean.lista_profesores}" reflow="true" styleClass="table"
-                                             paginator="true" rows="10" paginatorPosition="bottom"
-                                             sortBy="#{entidad.iduniversitario.nombre}"
-                                >
-                                    <f:facet name="header">
-                                        <div class="table-header">
-                                            <span style="font-weight: bold">Profesores</span>
                                         </div>
-                                    </f:facet>
-                                    <p:column headerText="Nombre"
-                                              filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
-                                        <h:outputText value="#{entidad.iduniversitario.nombre}"/>
-                                    </p:column>
-                                    <p:column headerText="Facultad" filterBy="#{entidad.facultad}" sortBy="#{entidad.facultad}">
-                                        <h:outputText value="#{entidad.facultad}"/>
-                                    </p:column>
-                                    <p:column headerText="Carrera"
-                                              filterBy="#{entidad.carrera}"
-                                              sortBy="#{entidad.carrera}">
-                                        <h:outputText value="#{entidad.carrera}"/>
-                                    </p:column>
-                                    <p:column headerText="Estudiante"
-                                              filterBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"
-                                              sortBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}">
-                                        <h:outputText
-                                                style="color: #{template_bean.getEstiloEnTablaEsEstudiante(entidad)};"
-                                                value="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"/>
-                                    </p:column>
-                                </p:dataTable>
-
-                            </p:panel>
-                            <p:panel header="Estudiantes">
-                                <p:dataTable tableStyleClass="table-striped" id="dt-entidad-estudiantes" var="entidad"
-                                             value="#{adminCapasitacion_bean.lista_estudiante}"
-                                             reflow="true" styleClass="table"
-                                             paginator="true" rows="10" paginatorPosition="bottom"
-                                             sortBy="#{entidad.iduniversitario.nombre}"
-                                >
-                                    <f:facet name="header">
-                                        <div class="table-header">
-                                            <span style="font-weight: bold">Estudiantes</span>
+                                        <div class="col-10">
+                                            <p:outputLabel>#{adminCapasitacion_bean.entidad.titulo}</p:outputLabel>
                                         </div>
-                                    </f:facet>
-                                    <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
-                                        <h:outputText value="#{entidad.iduniversitario.nombre}"/>
-                                    </p:column>
-                                    <p:column headerText="Facultad" filterBy="#{entidad.facultad}"
-                                              sortBy="#{entidad.facultad}">
-                                        <h:outputText value="#{entidad.facultad}"/>
-                                    </p:column>
-                                    <p:column headerText="Carrera" filterBy="#{entidad.carrera}"
-                                              sortBy="#{entidad.carrera}">
-                                        <h:outputText value="#{entidad.carrera}"/>
-                                    </p:column>
-                                    <p:column headerText="Curso" filterBy="#{entidad.curso}" sortBy="#{entidad.curso}">
-                                        <h:outputText value="#{entidad.curso}"/>
-                                    </p:column>
-                                    <p:column headerText="Semestre" filterBy="#{entidad.semestre}" sortBy="#{entidad.semestre}">
-                                        <h:outputText value="#{entidad.semestre}"/>
-                                    </p:column>
-                                </p:dataTable>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <strong>Tema:</strong>
 
-                            </p:panel>
+                                        </div>
+                                        <div class="col-10">
+                                            <p:outputLabel>#{adminCapasitacion_bean.entidad.tema}</p:outputLabel>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <strong>Edici&oacute;: </strong>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <p:outputLabel>#{adminCapasitacion_bean.entidad.edicion}</p:outputLabel>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-2 d-flex flex-row-reverse">
+                                            <strong>Programa: </strong>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <p:outputLabel>#{adminCapasitacion_bean.entidad.programa}</p:outputLabel>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3 d-flex flex-row-reverse">
+                                            <strong>Fecha de Inicio: </strong>
+
+
+                                        </div>
+                                        <div class="col-3">
+                                            <h:outputText value="#{adminCapasitacion_bean.entidad.fechaInicio}"><f:convertDateTime pattern="dd/MM/yyyy hh:mm a" /></h:outputText>
+                                        </div>
+                                        <div class="col-3 d-flex flex-row-reverse">
+                                            <strong>Fecha de Fin: </strong>
+
+
+                                        </div>
+                                        <div class="col-3">
+                                            <h:outputText value="#{adminCapasitacion_bean.entidad.fechaFin}"><f:convertDateTime pattern="dd/MM/yyyy hh:mm a" /></h:outputText>
+                                        </div>
+                                    </div>
+                                </p:tab>
+                                <p:tab title="Profesores">
+                                    <p:dataTable tableStyleClass="table-striped" id="dt-entidad-profesores"
+                                                 var="entidad" value="#{adminCapasitacion_bean.lista_profesores}" reflow="true" styleClass="table"
+                                                 paginator="true" rows="10" paginatorPosition="bottom"
+                                                 sortBy="#{entidad.iduniversitario.nombre}"
+                                    >
+                                        <f:facet name="header">
+                                            <div class="table-header">
+                                                <span style="font-weight: bold">Profesores</span>
+                                            </div>
+                                        </f:facet>
+                                        <p:column headerText="Nombre"
+                                                  filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
+                                            <h:outputText value="#{entidad.iduniversitario.nombre}"/>
+                                        </p:column>
+                                        <p:column headerText="Facultad" styleClass="text-center"
+                                                  filterBy="#{entidad.facultad}" sortBy="#{entidad.facultad}">
+                                            <h:outputText value="#{entidad.facultad}"/>
+                                        </p:column>
+                                        <p:column headerText="Carrera" styleClass="text-center"
+                                                  filterBy="#{entidad.carrera}"
+                                                  sortBy="#{entidad.carrera}">
+                                            <h:outputText value="#{entidad.carrera}"/>
+                                        </p:column>
+                                        <p:column headerText="Estudiante" styleClass="text-center"
+                                                  filterBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"
+                                                  sortBy="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}">
+                                            <h:outputText
+                                                    style="color: #{template_bean.getEstiloEnTablaEsEstudiante(entidad)};"
+                                                    value="#{template_bean.getTextoEnTablaEsEstudiante(entidad)}"/>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </p:tab>
+                                <p:tab title="Estudiantes">
+                                    <p:dataTable tableStyleClass="table-striped" id="dt-entidad-estudiantes" var="entidad"
+                                                 value="#{adminCapasitacion_bean.lista_estudiante}"
+                                                 reflow="true" styleClass="table"
+                                                 paginator="true" rows="10" paginatorPosition="bottom"
+                                                 sortBy="#{entidad.iduniversitario.nombre}"
+                                    >
+                                        <f:facet name="header">
+                                            <div class="table-header">
+                                                <span style="font-weight: bold">Estudiantes</span>
+                                            </div>
+                                        </f:facet>
+                                        <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}" sortBy="#{entidad.iduniversitario.nombre}">
+                                            <h:outputText value="#{entidad.iduniversitario.nombre}"/>
+                                        </p:column>
+                                        <p:column headerText="Facultad" styleClass="text-center" filterBy="#{entidad.facultad}"
+                                                  sortBy="#{entidad.facultad}">
+                                            <h:outputText value="#{entidad.facultad}"/>
+                                        </p:column>
+                                        <p:column headerText="Carrera" styleClass="text-center" filterBy="#{entidad.carrera}"
+                                                  sortBy="#{entidad.carrera}">
+                                            <h:outputText value="#{entidad.carrera}"/>
+                                        </p:column>
+                                        <p:column headerText="Curso" styleClass="text-center" filterBy="#{entidad.curso}" sortBy="#{entidad.curso}">
+                                            <h:outputText value="#{entidad.curso}"/>
+                                        </p:column>
+                                        <p:column headerText="Semestre" styleClass="text-center" filterBy="#{entidad.semestre}" sortBy="#{entidad.semestre}">
+                                            <h:outputText value="#{entidad.semestre}"/>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </p:tab>
+                            </p:tabView>
+
+<!--                            <p:outputPanel>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="p-field">-->
+<!--                                    -->
+<!--                                </div>-->
+
+<!--                            </p:outputPanel>-->
+<!--                            <p:panel header="Profesores">-->
+<!--                                -->
+<!--                            </p:panel>-->
+<!--                            <p:panel header="Estudiantes">-->
+<!--                                -->
+<!--                            </p:panel>-->
                         </p:outputPanel>
                         <f:facet name="footer">
                             <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoDialog').hide()"

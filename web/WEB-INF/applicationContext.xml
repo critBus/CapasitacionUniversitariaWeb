@@ -15,7 +15,7 @@
         <security:intercept-url pattern="/pages/AdminCapasitaciones_Seminario.faces" access="hasAnyRole('ROLE_USER')"/>
         <security:intercept-url pattern="/pages/AdminCapasitaciones_Taller.faces" access="hasAnyRole('ROLE_USER')"/>
         <security:intercept-url pattern="/resources/*" access="permitAll()"/>
-        <security:intercept-url pattern="/login.faces" access="isAnonymous()"/>
+        <security:intercept-url pattern="/login.faces" access="permitAll()"/>
 
         <!--Configuration of login and logout pages-->
         <security:form-login login-page='/login.faces' default-target-url='/index.faces'

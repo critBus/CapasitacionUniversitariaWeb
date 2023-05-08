@@ -42,13 +42,14 @@ public class RestUsers {
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"find/"+username)).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >299){
                 response.join();
                 return null;
             }else {
 
                 try {
-                    user = JSONUtils.covertFromJsonToObject(response.get().body(), Users.class);
+                    String body=response.get().body();
+                    user = JSONUtils.covertFromJsonToObject(body, Users.class);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

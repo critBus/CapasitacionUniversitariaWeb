@@ -40,7 +40,7 @@ public class RestAuthorities {
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findByUsername/"+username)).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >299){
                 response.join();
                 return null;
             }else {
@@ -99,7 +99,8 @@ public class RestAuthorities {
                 response.join();
                 return false;
             } else {
-                authority = JSONUtils.covertFromJsonToObject(response.get().body(), Authorities.class);
+                String body=response.get().body();
+                authority = JSONUtils.covertFromJsonToObject(body, Authorities.class);
                 response.join();
                 return true;
             }
