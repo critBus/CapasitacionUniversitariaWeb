@@ -23,77 +23,85 @@
     <ui:composition template="template.xhtml">
         <ui:define name="title">Administrar Estudiantes</ui:define>
         <ui:define name="content">
-            <h1>Administrar Estudiantes</h1>
+            <div class="row ">
+                <div class="col-12 text-center">
+                    <h1>Administrar Estudiantes</h1>
+                </div>
+
+            </div>
+
             #{adminEstudiantes_bean.init()}
-            <h:form id="form">
-                <p:growl id="messages" showDetail="true"/>
-                <div class="row">
-                    <div class="col col-sm-2">
-                        <p:commandButton styleClass="btn btn-primary mr-2" icon="mdi mdi-library-plus" value="Adicionar" process="@this" actionListener="#{adminEstudiantes_bean.clean_variables()}"
-                                         oncomplete="PF('addDialog').show()"
-                                         update="form:manage-user-content"
-                                         style="margin-right: .5rem"/>
-                        <br/>
+            <div class="row ">
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true"/>
+                    <div class="row">
+                        <div class="col col-sm-2">
+                            <p:commandButton  icon="mdi mdi-library-plus"
+                                             value="Adicionar" process="@this" actionListener="#{adminEstudiantes_bean.clean_variables()}"
+                                             oncomplete="PF('addDialog').show()"
+                                             update="form:manage-user-content"
+                                             style="margin-right: .5rem"/>
+                            <br/>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col col-md-12">
-                    <p:dataTable tableStyleClass="table-striped" id="dt-entidad" var="entidad" value="#{adminEstudiantes_bean.lista_de_entidades}" reflow="true" styleClass="table"
-                                 paginator="true" rows="10" paginatorPosition="bottom"
-                                 sortBy="#{entidad.iduniversitario.nombre}"
+                    <div class="row">
+                        <div class="col col-md-12">
+                            <p:dataTable tableStyleClass="table-striped" id="dt-entidad" var="entidad" value="#{adminEstudiantes_bean.lista_de_entidades}" reflow="true" styleClass="table"
+                                         paginator="true" rows="10" paginatorPosition="bottom"
+                                         sortBy="#{entidad.iduniversitario.nombre}"
+                            >
+                                <f:facet name="header">
+                                    <div class="table-header">
+                                        <span style="font-weight: bold">Estudiantes</span>
+                                    </div>
+                                </f:facet>
+                                <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}"
+                                          sortBy="#{entidad.iduniversitario.nombre}">
+                                    <h:outputText value="#{entidad.iduniversitario.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Facultad" filterBy="#{entidad.facultad}"
+                                          sortBy="#{entidad.facultad}">
+                                    <h:outputText value="#{entidad.facultad}"/>
+                                </p:column>
+                                <p:column headerText="Carrera" filterBy="#{entidad.carrera}"
+                                          sortBy="#{entidad.carrera}">
+                                    <h:outputText value="#{entidad.carrera}"/>
+                                </p:column>
+                                <p:column headerText="Curso" filterBy="#{entidad.curso}" sortBy="#{entidad.curso}">
+                                    <h:outputText value="#{entidad.curso}"/>
+                                </p:column>
+                                <p:column headerText="Semestre" filterBy="#{entidad.semestre}" sortBy="#{entidad.semestre}">
+                                    <h:outputText value="#{entidad.semestre}"/>
+                                </p:column>
+                                <p:column headerText="Opciones" exportable="false">
+                                    <p:commandButton icon="ui-icon-info" update=":form:info-content" process="@this" oncomplete="PF('infoDialog').show()"
+                                                     actionListener="#{adminEstudiantes_bean.copyedit(entidad)}">
+                                    </p:commandButton>
+                                    <p:commandButton icon="ui-icon-edit" update=":form:edit-content" process="@this" oncomplete="PF('editDialog').show()" actionListener="#{adminEstudiantes_bean.copyedit(entidad)}">
+                                    </p:commandButton>
+                                    <p:commandButton icon="ui-icon-trash" process="@this" oncomplete="PF('deleteDialog').show()">
+                                        <f:setPropertyActionListener value="#{entidad}" target="#{adminEstudiantes_bean.entidad}"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    <style type="text/css">
+                        .ui-grid td {
+                            white-space: nowrap;
+                        }
+
+
+                    </style>
+                    <!--Adicionar estudiante dialog-->
+                    <p:dialog header="Adicionar Estudiante" height="400" width="450" showEffect="fade" modal="true"
+                              widgetVar="addDialog" id="addDialog" responsive="true"
+                              onHide="PF('addDialog').hide(); #{adminEstudiantes_bean.clean_variables()}"
+                              onShow="#{adminEstudiantes_bean.clean_variables()}"
                     >
-                        <f:facet name="header">
-                            <div class="table-header">
-                                <span style="font-weight: bold">Estudiantes</span>
-                            </div>
-                        </f:facet>
-                        <p:column headerText="Nombre" filterBy="#{entidad.iduniversitario.nombre}"
-                                  sortBy="#{entidad.iduniversitario.nombre}">
-                            <h:outputText value="#{entidad.iduniversitario.nombre}"/>
-                        </p:column>
-                        <p:column headerText="Facultad" filterBy="#{entidad.facultad}"
-                                  sortBy="#{entidad.facultad}">
-                            <h:outputText value="#{entidad.facultad}"/>
-                        </p:column>
-                        <p:column headerText="Carrera" filterBy="#{entidad.carrera}"
-                                  sortBy="#{entidad.carrera}">
-                            <h:outputText value="#{entidad.carrera}"/>
-                        </p:column>
-                        <p:column headerText="Curso" filterBy="#{entidad.curso}" sortBy="#{entidad.curso}">
-                            <h:outputText value="#{entidad.curso}"/>
-                        </p:column>
-                        <p:column headerText="Semestre" filterBy="#{entidad.semestre}" sortBy="#{entidad.semestre}">
-                            <h:outputText value="#{entidad.semestre}"/>
-                        </p:column>
-                        <p:column headerText="Opciones" exportable="false">
-                            <p:commandButton icon="ui-icon-info" update=":form:info-content" process="@this" oncomplete="PF('infoDialog').show()"
-                                             actionListener="#{adminEstudiantes_bean.copyedit(entidad)}">
-                            </p:commandButton>
-                            <p:commandButton icon="ui-icon-edit" update=":form:edit-content" process="@this" oncomplete="PF('editDialog').show()" actionListener="#{adminEstudiantes_bean.copyedit(entidad)}">
-                            </p:commandButton>
-                            <p:commandButton icon="ui-icon-trash" process="@this" oncomplete="PF('deleteDialog').show()">
-                                <f:setPropertyActionListener value="#{entidad}" target="#{adminEstudiantes_bean.entidad}"/>
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                    </div>
-                </div>
-                <style type="text/css">
-                    .ui-grid td {
-                        white-space: nowrap;
-                    }
-
-
-                </style>
-                <!--Adicionar estudiante dialog-->
-                <p:dialog header="Adicionar Estudiante" height="400" width="450" showEffect="fade" modal="true"
-                          widgetVar="addDialog" id="addDialog" responsive="true"
-                          onHide="PF('addDialog').hide(); #{adminEstudiantes_bean.clean_variables()}"
-                          onShow="#{adminEstudiantes_bean.clean_variables()}"
-                >
-                    <p:outputPanel id="manage-user-content" class="ui-fluid">
-<!--                        # {adminEstudiantes_bean.clean_variables()}-->
-                        <p:outputPanel>
+                        <p:outputPanel id="manage-user-content" class="ui-fluid">
+                            <!--                        # {adminEstudiantes_bean.clean_variables()}-->
+                            <p:outputPanel>
                                 <div class="p-field">
                                     <p:outputLabel for="idNombre">Nombre: </p:outputLabel>
                                     <p:inputText id="idNombre" value="#{adminEstudiantes_bean.nombre}"
@@ -106,7 +114,7 @@
                                     </p:inputText>
 
 
-<!--                                    required="true"-->
+                                    <!--                                    required="true"-->
                                 </div>
                                 <div class="p-field">
                                     <p:outputLabel for="idFacultad">Facultad: </p:outputLabel>
@@ -127,7 +135,7 @@
                                                  validator="#{validaciones_bean.validarConLetras}"
                                                  requiredMessage="El nombre de la carrera no puede estar vacío "
                                     >
-<!--                                        <f:validateLength minimum="4" maximum="50"/>-->
+                                        <!--                                        <f:validateLength minimum="4" maximum="50"/>-->
                                     </p:inputText>
                                 </div>
                                 <div class="p-field">
@@ -135,20 +143,20 @@
                                     <p:spinner required="true" id="idCurso" value="#{adminEstudiantes_bean.curso}" min="1" max="5"
 
                                                converterMessage="El curso debe de ser un numero de entre 1 y 5"
-                                               >
-<!--                                        <f:validateLongRange minimum="1" maximum="5" />-->
+                                    >
+                                        <!--                                        <f:validateLongRange minimum="1" maximum="5" />-->
                                     </p:spinner>
                                 </div>
-                            <div class="p-field">
-                                <p:outputLabel for="idSemestre">Semestre: </p:outputLabel>
-                                <p:spinner required="true" id="idSemestre" value="#{adminEstudiantes_bean.semestre}" min="1" max="2"
-                                           converterMessage="El semestre debe de ser un numero de entre 1 y 2"
-                                />
-                            </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idSemestre">Semestre: </p:outputLabel>
+                                    <p:spinner required="true" id="idSemestre" value="#{adminEstudiantes_bean.semestre}" min="1" max="2"
+                                               converterMessage="El semestre debe de ser un numero de entre 1 y 2"
+                                    />
+                                </div>
                                 <div class="p-field">
                                     <p:outputLabel for="description">Descripci&oacute;n: </p:outputLabel>
                                     <p:inputTextarea id="description" value="#{adminEstudiantes_bean.descripcion}"
-                                    maxlength="250"
+                                                     maxlength="250"
                                     />
                                 </div>
 
@@ -163,142 +171,145 @@
                                              class="ui-button-secondary"/>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         </f:facet>
-                </p:dialog>
+                    </p:dialog>
 
-                <!--Editar estudiante Dialog-->
-                <p:dialog header="Editar" height="400" width="450" showEffect="fade" modal="true"
-                          widgetVar="editDialog" id="editDialog" responsive="true">
-                    <p:outputPanel id="edit-content" class="ui-fluid">
-                        <p:outputPanel>
-                            <div class="p-field">
-                                <p:outputLabel for="idNombreEdit">Nombre: </p:outputLabel>
-                                <p:inputText
-                                        id="idNombreEdit"
-                                             value="#{adminEstudiantes_bean.entidad.iduniversitario.nombre}"
-                                             required="true"
-                                             validator="#{validaciones_bean.validarNombre}"
-                                             mensajeParaValidacion="Introduzca un nombre correcto"
-                                             requiredMessage="El nombre no puede estar vacío "
+                    <!--Editar estudiante Dialog-->
+                    <p:dialog header="Editar" height="400" width="450" showEffect="fade" modal="true"
+                              widgetVar="editDialog" id="editDialog" responsive="true">
+                        <p:outputPanel id="edit-content" class="ui-fluid">
+                            <p:outputPanel>
+                                <div class="p-field">
+                                    <p:outputLabel for="idNombreEdit">Nombre: </p:outputLabel>
+                                    <p:inputText
+                                            id="idNombreEdit"
+                                            value="#{adminEstudiantes_bean.entidad.iduniversitario.nombre}"
+                                            required="true"
+                                            validator="#{validaciones_bean.validarNombre}"
+                                            mensajeParaValidacion="Introduzca un nombre correcto"
+                                            requiredMessage="El nombre no puede estar vacío "
 
-                                >
-<!--                          validatorMessage="Introduzca un nombre correcto"          -->
-<!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_SoloLetras()}" />-->
+                                    >
+                                        <!--                          validatorMessage="Introduzca un nombre correcto"          -->
+                                        <!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_SoloLetras()}" />-->
 
-                                </p:inputText>
-                            </div>
-                            <div class="p-field">
-                                <p:outputLabel for="idFacultadEdit">Facultad: </p:outputLabel>
-                                <p:inputText id="idFacultadEdit"
-                                             value="#{adminEstudiantes_bean.entidad.facultad}"
-                                             required="true"
-                                             mensajeParaValidacion="Introduzca un nombre de facultad correcto"
-                                             validator="#{validaciones_bean.validarConLetras}"
-                                             requiredMessage="El nombre de la facultad no puede estar vacío "
-                                >
-<!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_CaracteresAlfanumericos()}" />-->
-<!--                                    <f:validateLength minimum="4" maximum="50" />-->
-                                </p:inputText>
-                            </div>
-                            <div class="p-field">
-                                <p:outputLabel for="idCarreraEdit">Carrera: </p:outputLabel>
-                                <p:inputText id="idCarreraEdit"
-                                             value="#{adminEstudiantes_bean.entidad.carrera}"
-                                             mensajeParaValidacion="Introduzca un nombre de carrera correcto"
-                                             validator="#{validaciones_bean.validarConLetras}"
-                                             requiredMessage="El nombre de la carrera no puede estar vacío "
-                                             required="true">
-<!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_CaracteresAlfanumericos()}" />-->
+                                    </p:inputText>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idFacultadEdit">Facultad: </p:outputLabel>
+                                    <p:inputText id="idFacultadEdit"
+                                                 value="#{adminEstudiantes_bean.entidad.facultad}"
+                                                 required="true"
+                                                 mensajeParaValidacion="Introduzca un nombre de facultad correcto"
+                                                 validator="#{validaciones_bean.validarConLetras}"
+                                                 requiredMessage="El nombre de la facultad no puede estar vacío "
+                                    >
+                                        <!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_CaracteresAlfanumericos()}" />-->
+                                        <!--                                    <f:validateLength minimum="4" maximum="50" />-->
+                                    </p:inputText>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idCarreraEdit">Carrera: </p:outputLabel>
+                                    <p:inputText id="idCarreraEdit"
+                                                 value="#{adminEstudiantes_bean.entidad.carrera}"
+                                                 mensajeParaValidacion="Introduzca un nombre de carrera correcto"
+                                                 validator="#{validaciones_bean.validarConLetras}"
+                                                 requiredMessage="El nombre de la carrera no puede estar vacío "
+                                                 required="true">
+                                        <!--                                    <f:validateRegex pattern="# {template_bean.obtenerPatron_CaracteresAlfanumericos()}" />-->
 
-                                </p:inputText>
-                            </div>
-                            <div class="p-field">
-                                <p:outputLabel for="idCursoEdit">Curso: </p:outputLabel>
-                                <p:spinner id="idCursoEdit" value="#{adminEstudiantes_bean.entidad.curso}"
-                                           min="1" max="5"
-                                           required="true"
-                                           converterMessage="El curso debe de ser un numero de entre 1 y 5"
-                                />
-                            </div>
-                            <div class="p-field">
-                                <p:outputLabel for="idSemestreEdit">Semestre: </p:outputLabel>
-                                <p:spinner id="idSemestreEdit" value="#{adminEstudiantes_bean.entidad.semestre}" min="1" max="2"
-                                           required="true"
-                                           converterMessage="El Semestre debe de ser un numero de entre 1 y 2"
-                                />
-                            </div>
-                            <div class="p-field">
-                                <p:outputLabel for="descriptionEdit">Descripci&oacute;n: </p:outputLabel>
-                                <p:inputTextarea id="descriptionEdit" value="#{adminEstudiantes_bean.entidad.iduniversitario.descripcion}"
-                                                 maxlength="250"
-                                />
-                            </div>
+                                    </p:inputText>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idCursoEdit">Curso: </p:outputLabel>
+                                    <p:spinner id="idCursoEdit" value="#{adminEstudiantes_bean.entidad.curso}"
+                                               min="1" max="5"
+                                               required="true"
+                                               converterMessage="El curso debe de ser un numero de entre 1 y 5"
+                                    />
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="idSemestreEdit">Semestre: </p:outputLabel>
+                                    <p:spinner id="idSemestreEdit" value="#{adminEstudiantes_bean.entidad.semestre}" min="1" max="2"
+                                               required="true"
+                                               converterMessage="El Semestre debe de ser un numero de entre 1 y 2"
+                                    />
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="descriptionEdit">Descripci&oacute;n: </p:outputLabel>
+                                    <p:inputTextarea id="descriptionEdit" value="#{adminEstudiantes_bean.entidad.iduniversitario.descripcion}"
+                                                     maxlength="250"
+                                    />
+                                </div>
+                            </p:outputPanel>
                         </p:outputPanel>
-                    </p:outputPanel>
-                    <f:facet name="footer">
-                        <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>
-        <!--                <p:outputLabel style="color: red"  value="* Campos de llenado obligatorio"/> <br></br>-->
-                        <p:commandButton value="Guardar" icon="pi pi-check"
-                                         actionListener="#{adminEstudiantes_bean.edit()}"
-                                         update="edit-content,form:messages" process="edit-content @this"/>
-                        <p:commandButton value="Cancel" icon="pi pi-times"
+                        <f:facet name="footer">
+                            <p:staticMessage severity="error" summary="*" detail="Campos de llenado obligatorio." style="width: 100%"/>
+                            <!--                <p:outputLabel style="color: red"  value="* Campos de llenado obligatorio"/> <br></br>-->
+                            <p:commandButton value="Guardar" icon="pi pi-check"
+                                             actionListener="#{adminEstudiantes_bean.edit()}"
+                                             update="edit-content,form:messages" process="edit-content @this"/>
+                            <p:commandButton value="Cancel" icon="pi pi-times"
 
-                                         onclick="PF('editDialog').hide()"
-                                         class="ui-button-secondary" update="edit-content" process="edit-content @this"/>
-                    </f:facet>
-                </p:dialog>
-<!--actionListener="# {adminEstudiantes_bean.alApretarEnCancelarEditar()}"-->
-                <!--Info Estudiante Dialog-->
-                <p:dialog header="Informaci&oacute;n" width="450" showEffect="fade" modal="true"
-                          widgetVar="infoDialog" id="infoDialog" responsive="true">
-                    <p:outputPanel id="info-content" class="ui-fluid">
-                        <p:outputPanel>
-                            <div class="p-field">
-                                <strong>Nombre: </strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.iduniversitario.nombre}</p:outputLabel>
-                            </div>
-                            <div class="p-field">
-                                <strong>Facultad</strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.facultad}</p:outputLabel>
-                            </div>
-                            <div class="p-field">
-                                <strong>Carrera: </strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.carrera}</p:outputLabel>
-                            </div>
-                            <div class="p-field">
-                                <strong>Curso: </strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.curso}</p:outputLabel>
-                            </div>
-                            <div class="p-field">
-                                <strong>Semestre: </strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.semestre}</p:outputLabel>
-                            </div>
-                            <div class="p-field">
-                                <strong>Descripci&oacute;n: </strong>
-                                <p:outputLabel>#{adminEstudiantes_bean.entidad.iduniversitario.descripcion}</p:outputLabel>
-                            </div>
+                                             onclick="PF('editDialog').hide()"
+                                             class="ui-button-secondary" update="edit-content" process="edit-content @this"/>
+                        </f:facet>
+                    </p:dialog>
+                    <!--actionListener="# {adminEstudiantes_bean.alApretarEnCancelarEditar()}"-->
+                    <!--Info Estudiante Dialog-->
+                    <p:dialog header="Informaci&oacute;n" width="450" showEffect="fade" modal="true"
+                              widgetVar="infoDialog" id="infoDialog" responsive="true">
+                        <p:outputPanel id="info-content" class="ui-fluid">
+                            <p:outputPanel>
+                                <div class="p-field">
+                                    <strong>Nombre: </strong>
+                                    <p:outputLabel>#{adminEstudiantes_bean.entidad.iduniversitario.nombre}</p:outputLabel>
+                                </div>
+                                <div class="p-field">
+                                    <strong>Facultad</strong>
+                                    <p:outputLabel>#{adminEstudiantes_bean.entidad.facultad}</p:outputLabel>
+                                </div>
+                                <div class="p-field">
+                                    <strong>Carrera: </strong>
+                                    <p:outputLabel>#{adminEstudiantes_bean.entidad.carrera}</p:outputLabel>
+                                </div>
+                                <div class="p-field">
+                                    <strong>Curso: </strong>
+                                    <p:outputLabel>#{adminEstudiantes_bean.entidad.curso}</p:outputLabel>
+                                </div>
+                                <div class="p-field">
+                                    <strong>Semestre: </strong>
+                                    <p:outputLabel>#{adminEstudiantes_bean.entidad.semestre}</p:outputLabel>
+                                </div>
+                                <div class="p-field">
+                                    <strong>Descripci&oacute;n: </strong>
+                                    <p:outputLabel>#{adminEstudiantes_bean.entidad.iduniversitario.descripcion}</p:outputLabel>
+                                </div>
 
+                            </p:outputPanel>
                         </p:outputPanel>
-                    </p:outputPanel>
-                    <f:facet name="footer">
-                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoDialog').hide()"
-                                         class="ui-button-secondary" update="info-content" process="info-content @this"/>
-                    </f:facet>
-                </p:dialog>
+                        <f:facet name="footer">
+                            <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoDialog').hide()"
+                                             class="ui-button-secondary" update="info-content" process="info-content @this"/>
+                        </f:facet>
+                    </p:dialog>
 
-                <!--Confirm dialog-->
-                <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
-                                 message="Eliminar el Estudiante?" header="Confirm" severity="warn">
-                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminEstudiantes_bean.delete}"
-                                     process="@this" oncomplete="PF('deleteDialog').hide()"/>
-                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
-                                     onclick="PF('deleteDialog').hide()"/>
-                </p:confirmDialog>
-                <p:confirmDialog global="true" showEffect="fade" width="300">
-                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
-                                     icon="ui-icon-times"/>
-                </p:confirmDialog>
-            </h:form>
+                    <!--Confirm dialog-->
+                    <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
+                                     message="Eliminar el Estudiante?" header="Confirm" severity="warn">
+                        <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminEstudiantes_bean.delete}"
+                                         process="@this" oncomplete="PF('deleteDialog').hide()"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                         onclick="PF('deleteDialog').hide()"/>
+                    </p:confirmDialog>
+                    <p:confirmDialog global="true" showEffect="fade" width="300">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                         icon="ui-icon-times"/>
+                    </p:confirmDialog>
+                </h:form>
+
+            </div>
+
         </ui:define>
     </ui:composition>
 </h:body>

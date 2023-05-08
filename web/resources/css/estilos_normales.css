@@ -1,0 +1,40 @@
+/* Estilo para el fondo del header */
+.navbar {
+    background-color: #1e90ff !important;
+    color: #dc5e5e !important;
+}
+
+/* Estilo para la barra de navegación a la izquierda */
+.sidebar {
+    background-color: #9c9373 !important;
+    color: #333 !important;
+}
+
+/* Estilo para el contenido principal */
+.main-panel {
+    background-color: #e03535 !important;
+    color: #333 !important;
+}
+
+/* Estilo para los enlaces en la barra de navegación */
+.nav-link {
+    color: #333 !important;
+}
+
+/* Estilo para los enlaces cuando se les pasa el cursor por encima */
+.nav-link:hover {
+    color: #1E90FF !important;
+}
+
+/* Estilo para los botones en la barra de navegación */
+.navbar-toggler {
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+/* Estilo para los botones cuando se les pasa el cursor por encima */
+.navbar-toggler:hover {
+    color: #fff !important;
+    background-color: #1E90FF !important;
+    border-color: #1E90FF !important;
+}
