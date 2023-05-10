@@ -256,7 +256,7 @@
                                 <p:tab title="Estudiantes">
                                     <p:outputPanel>
                                         <p:pickList id="PojoPickList" value="#{adminCapasitacion_bean.dualListModel_estudiantes}"
-                                                    var="entidad" effect="bounce"
+                                                    var="entidad"
                                                     itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}" showSourceControls="true" showTargetControls="true" showCheckbox="true"
                                                     showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
                                                     converter="estudianteConverter"
@@ -283,7 +283,7 @@
                                 </p:tab>
                                 <p:tab title="Profesores">
                                     <p:pickList id="PojoPickList2" value="#{adminCapasitacion_bean.dualListModel_profesores}"
-                                                var="entidad" effect="bounce"
+                                                var="entidad"
                                                 itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
                                                 showSourceControls="true" showTargetControls="true" showCheckbox="true"
                                                 showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
@@ -431,12 +431,17 @@
                                         </div>
                                     </div>
                                 </p:tab>
-                                <p:tab title="Profesores">
-                                    <p:pickList id="PojoPickListEditar" value="#{adminCapasitacion_bean.dualListModel_estudiantes}"
-                                                var="entidad" effect="bounce"
+                                <p:tab title="Estudiantes">
+                                    <p:pickList id="PojoPickListEditar"
+                                                value="#{adminCapasitacion_bean.dualListModel_estudiantes}"
+                                                var="entidad"
                                                 itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
-                                                showSourceControls="true" showTargetControls="true" showCheckbox="true"
-                                                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+                                                showSourceControls="true"
+                                                showTargetControls="true"
+                                                showCheckbox="true"
+                                                showSourceFilter="true"
+                                                showTargetFilter="true"
+                                                filterMatchMode="contains"
                                                 converter="estudianteConverter"
                                                 responsive="true">
                                         <!--                                -->
@@ -453,9 +458,10 @@
                                     </p:pickList>
 
                                 </p:tab>
-                                <p:tab title="Estudiantes">
-                                    <p:pickList id="PojoPickList2Editar" value="#{adminCapasitacion_bean.dualListModel_profesores}"
-                                                var="entidad" effect="bounce"
+                                <p:tab title="Profesores">
+                                    <p:pickList id="PojoPickList2Editar"
+                                                value="#{adminCapasitacion_bean.dualListModel_profesores}"
+                                                var="entidad"
                                                 itemValue="#{entidad}" itemLabel="#{entidad.iduniversitario.nombre}"
                                                 showSourceControls="true" showTargetControls="true" showCheckbox="true"
                                                 showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"

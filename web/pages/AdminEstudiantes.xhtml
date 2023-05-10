@@ -456,8 +456,13 @@
                     <!--Confirm dialog-->
                     <p:confirmDialog widgetVar="deleteDialog" showEffect="fade" width="300"
                                      message="Eliminar el Estudiante?" header="Confirm" severity="warn">
-                        <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminEstudiantes_bean.delete}"
-                                         process="@this" oncomplete="PF('deleteDialog').hide()"/>
+                        <p:commandButton value="Si"
+                                         icon="ui-icon-check"
+                                         actionListener="#{adminEstudiantes_bean.delete}"
+                                         update="form:dt-entidad"
+                                         process="@this"
+                                         oncomplete="PF('deleteDialog').hide()"/>
+<!--                        -->
                         <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
                                          onclick="PF('deleteDialog').hide()"/>
                     </p:confirmDialog>

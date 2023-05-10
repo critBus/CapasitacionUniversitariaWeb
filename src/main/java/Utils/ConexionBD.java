@@ -15,7 +15,17 @@ public class ConexionBD {
     private RestProfesor restProfesor=new RestProfesor();
     private RestUniversitario restUniversitario=new RestUniversitario();
     private RestUsers restUsers=new RestUsers();
-
+    private List<CapasitacionEstudiante> obtenerListaDeCapasitacionEstudiante(Estudiante c)throws Exception{
+        List<CapasitacionEstudiante> lce=obtenerListaDeCapasitacionEstudiante();
+        List<CapasitacionEstudiante> l=new ArrayList<>();
+        for (CapasitacionEstudiante ce :
+                lce) {
+            if (ce.getIdestudiante().getId().equals(c.getId())) {
+                l.add(ce);
+            }
+        }
+        return l;
+    }
     private List<CapasitacionEstudiante> obtenerListaDeCapasitacionEstudiante(Capasitacion c)throws Exception{
         List<CapasitacionEstudiante> lce=obtenerListaDeCapasitacionEstudiante();
         List<CapasitacionEstudiante> l=new ArrayList<>();
@@ -33,6 +43,17 @@ public class ConexionBD {
         for (CapasitacionProfesor ce :
                 lce) {
             if (ce.getIdcapasitacion().getId().equals(c.getId())) {
+                l.add(ce);
+            }
+        }
+        return l;
+    }
+    private List<CapasitacionProfesor> obtenerListaDeCapasitacionProfesor(Profesor c)throws Exception{
+        List<CapasitacionProfesor> lce=obtenerListaDeCapasitacionProfesor();
+        List<CapasitacionProfesor> l=new ArrayList<>();
+        for (CapasitacionProfesor ce :
+                lce) {
+            if (ce.getIdprofesor().getId().equals(c.getId())) {
                 l.add(ce);
             }
         }
@@ -543,13 +564,28 @@ public class ConexionBD {
         return null;
     }
     public boolean eliminar_Estudiante_YDatosDeUniversitarioSinProfesor(Estudiante e)throws Exception{
+        
         boolean esProfesor=esProfesor(e);
         Universitario u=obtenerUniversitario(e);
         if(u==null){
             return false;
         }
-        if(eliminar_Estudiante(e)&&!esProfesor){
-            return eliminar_Universitario(u);
+        return eliminar_Estudiante_Cascade(e,u,esProfesor);
+    }
+    private boolean eliminar_Estudiante_Cascade(Estudiante e,Universitario u,boolean esProfesor)throws Exception{
+        List<CapasitacionEstudiante> lc=obtenerListaDeCapasitacionEstudiante(e);
+        for (CapasitacionEstudiante ce :
+                lc) {
+            eliminar_CapasitacionEstudiante(ce);
+        }
+
+        if(eliminar_Estudiante(e)){//&&!esProfesor
+            if(!esProfesor){
+                return eliminar_Universitario(u);
+            }else{
+                return true;
+            }
+
         }
         return false;
     }
@@ -569,14 +605,19 @@ public class ConexionBD {
         return restCapasitacionProfesor.delete(e.getId());
     }
     public boolean eliminar_Profesor_Cascade(Profesor p)throws Exception{
-
-        if(esEstudiante(p)){
-            Estudiante e=obtenerEstudiante(p);
-            eliminar_Estudiante(e);
-        }
         Universitario u=obtenerUniversitario(p);
         if(u==null){
             return false;
+        }
+        if(esEstudiante(p)){
+            Estudiante e=obtenerEstudiante(p);
+            //eliminar_Estudiante(e);
+            eliminar_Estudiante_Cascade(e,u,true);
+        }
+        List<CapasitacionProfesor> lc=obtenerListaDeCapasitacionProfesor(p);
+        for (CapasitacionProfesor cp :
+                lc) {
+            eliminar_CapasitacionProfesor(cp);
         }
         if(eliminar_Profesor(p)){return eliminar_Universitario(u);}
         return false;
